@@ -57,6 +57,7 @@ O que resulta dessa decisão — trade-offs, impactos, dependências.
 | ADR | Decisão |
 |-----|---------|
 | [001](001-bun-as-runtime-and-package-manager.md) | Bun como runtime e package manager |
+| [002](002-axios-http-client.md) | Axios como HTTP client padrão |
 
 ### API
 
