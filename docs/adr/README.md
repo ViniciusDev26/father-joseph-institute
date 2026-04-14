@@ -65,6 +65,8 @@ O que resulta dessa decisão — trade-offs, impactos, dependências.
 | [001](api/001-fastify-bun-runtime.md) | Fastify 5 + Bun como runtime |
 | [002](api/002-standalone-binary-build.md) | Build para binário standalone |
 | [003](api/003-static-content-endpoint.md) | Endpoint de conteúdo estático (v1) |
+| [004](api/004-drizzle-orm.md) | Drizzle como ORM |
+| [005](api/005-api-docs-scalar.md) | Documentação da API com Scalar |
 
 ### Site
 
