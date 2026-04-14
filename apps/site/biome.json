@@ -1,0 +1,15 @@
+{
+  "extends": "//",
+  "linter": {
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    }
+  },
+  "css": {
+    "parser": {
+      "cssModules": true,
+      "tailwindDirectives": true
+    }
+  }
+}

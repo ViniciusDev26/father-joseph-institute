@@ -1,0 +1,15 @@
+{
+  "name": "father-joseph-institute",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "latest",
+    "turbo": "latest"
+  },
+  "packageManager": "bun@1.2.0",
+  "workspaces": ["apps/*", "packages/*"]
+}
