@@ -1,41 +1,5 @@
-export interface AboutContent {
-  hero: {
-    tag: string;
-    title: string;
-    subtitle: string;
-  };
-  mission: {
-    quote: string;
-  };
-  story: {
-    tag: string;
-    title: string;
-    paragraphs: string[];
-    image: string;
-  };
-  values: {
-    tag: string;
-    title: string;
-    items: {
-      title: string;
-      description: string;
-    }[];
-  };
-  impact: {
-    tag: string;
-    title: string;
-    stats: {
-      value: string;
-      label: string;
-    }[];
-  };
-  cta: {
-    tag: string;
-    title: string;
-    description: string;
-  };
-}
+import type { z } from 'zod/v4';
+import type { aboutContentSchema, siteContentSchema } from '../schemas/content';
 
-export interface SiteContent {
-  about: AboutContent;
-}
+export type AboutContent = z.infer<typeof aboutContentSchema>;
+export type SiteContent = z.infer<typeof siteContentSchema>;

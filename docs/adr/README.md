@@ -67,6 +67,7 @@ O que resulta dessa decisão — trade-offs, impactos, dependências.
 | [003](api/003-static-content-endpoint.md) | Endpoint de conteúdo estático (v1) |
 | [004](api/004-drizzle-orm.md) | Drizzle como ORM |
 | [005](api/005-api-docs-scalar.md) | Documentação da API com Scalar |
+| [006](api/006-zod-type-provider.md) | Zod como type provider do Fastify |
 
 ### Site
 

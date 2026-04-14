@@ -1,4 +1,6 @@
 import type { FastifyInstance } from 'fastify';
+import type { ZodTypeProvider } from 'fastify-type-provider-zod';
+import { siteContentSchema } from '../schemas/content';
 import type { SiteContent } from '../types/content';
 
 const content: SiteContent = {
@@ -51,7 +53,19 @@ const content: SiteContent = {
 };
 
 export async function contentRoutes(app: FastifyInstance) {
-  app.get('/content', async () => {
-    return content;
-  });
+  app.withTypeProvider<ZodTypeProvider>().get(
+    '/content',
+    {
+      schema: {
+        description: 'Returns all site content (about page sections)',
+        tags: ['Content'],
+        response: {
+          200: siteContentSchema,
+        },
+      },
+    },
+    async () => {
+      return content;
+    },
+  );
 }
