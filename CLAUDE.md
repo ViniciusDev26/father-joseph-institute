@@ -44,6 +44,27 @@ Turborepo monorepo with Bun as sole runtime/package manager. Two active apps:
 
 **`docs/adr/`** — Architecture Decision Records organized per project (`api/`, `site/`, `admin/`), each with independent numbering starting at 001.
 
+## Spec-Driven Development
+
+This project follows a **spec-driven** approach. Specs live in `docs/specs/` and are the single source of truth for what the application should do. See `docs/specs/README.md` for full details.
+
+Backend and frontend are independent — they communicate exclusively through API specs. Never reference one side from the other directly.
+
+### Rules for the AI
+
+1. **Spec first, code second.** Before implementing anything, check if a spec exists in `docs/specs/`. If not, write the spec and get user approval before writing code.
+2. **Implement only what is specified.** If the user asks for a list endpoint, create only the list endpoint — not the full CRUD. If a spec defines three fields, implement three fields — not five. Never add endpoints, fields, features, or behaviors beyond what was explicitly requested or specified.
+3. **Follow the templates.** Use the `_template.md` in the corresponding directory:
+   - Entities: `docs/specs/backend/entities/_template.md`
+   - Backend features: `docs/specs/backend/features/_template.md`
+   - API contracts: `docs/specs/api/_template.md`
+   - Pages: `docs/specs/frontend/pages/_template.md`
+   - Components: `docs/specs/frontend/components/_template.md`
+   - Frontend features: `docs/specs/frontend/features/_template.md`
+4. **Specs override assumptions.** If a spec says something, follow the spec — even if a "common" pattern would do it differently.
+5. **Flag conflicts.** If a user request contradicts an existing spec, flag the conflict and ask for clarification before proceeding.
+6. **Reference ADRs for the _how_.** Specs define _what_ to build. ADRs in `docs/adr/` define _how_ (patterns, conventions, tech choices). Don't duplicate ADR content in specs.
+
 ## Key Conventions
 
 - **Environment variables**: Always validated with Zod in `env.ts` — import `env` object, never use `process.env` directly.
@@ -64,5 +85,5 @@ Turborepo monorepo with Bun as sole runtime/package manager. Two active apps:
 | API | Fastify 5, TypeScript, Zod 4 |
 | API Docs | @fastify/swagger + @scalar/fastify-api-reference |
 | Type Provider | fastify-type-provider-zod |
-| ORM (planned) | Drizzle |
+| ORM | Drizzle |
 | Linter / Formatter | Biome v2 |
