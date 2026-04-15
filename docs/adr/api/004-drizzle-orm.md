@@ -5,21 +5,43 @@
 
 ## Context
 
-The API currently serves hardcoded content (see ADR-003). The next step is introducing a database so that content can be managed at runtime via CRUD endpoints and an admin panel. We need an ORM that is lightweight, type-safe, and works well with Bun and TypeScript.
+A API precisa de um ORM leve, type-safe e compatível com Bun e TypeScript para interagir com o PostgreSQL (ADR Global-004).
 
 ## Decision
 
-Use **Drizzle ORM** as the data access layer for the API.
+Use **Drizzle ORM** como data access layer da API.
 
-- **Schema definition:** Drizzle schemas defined in TypeScript, co-located in `src/db/schema/`.
-- **Migrations:** Managed with `drizzle-kit` — generate SQL migrations from schema changes.
-- **Query style:** Prefer the relational query API for reads and the insert/update/delete builders for writes.
-- **Driver:** Use the appropriate Drizzle driver for the chosen database (e.g., `drizzle-orm/postgres-js` for PostgreSQL).
+- **Driver:** `postgres-js` via `drizzle-orm/postgres-js`.
+- **Connection:** Instância configurada em `src/database/connection.ts`, exportando `db`.
+- **Schema:** Um arquivo por entidade em `src/database/schema/`, com barrel export em `index.ts`.
+- **Migrations:** Gerenciadas pelo `drizzle-kit`, output em `src/database/migrations/`.
+- **Config:** `drizzle.config.ts` na raiz do projeto da API, usando `env.ts` para credenciais.
+- **Query style:** Relational query API para leituras, query builders para escrita.
+
+### Estrutura
+
+```
+src/database/
+├── connection.ts          # Client postgres-js + instância drizzle
+├── schema/
+│   ├── index.ts           # Barrel export de todas as entidades
+│   └── <entidade>.ts      # Uma entidade por arquivo (pgTable)
+└── migrations/            # SQL gerado pelo drizzle-kit
+```
+
+### Scripts
+
+| Script | Comando |
+|--------|---------|
+| `bun run db:generate` | Gera migration SQL a partir das mudanças no schema |
+| `bun run db:migrate` | Aplica migrations pendentes no banco |
+| `bun run db:push` | Sincroniza schema direto no banco (dev) |
+| `bun run db:studio` | Abre o Drizzle Studio para visualizar dados |
 
 ## Consequences
 
-- Full type safety from schema to query results — no manual type casting or raw SQL for standard operations.
-- Drizzle is one of the lightest ORMs available, with no heavy runtime or code generation step, which aligns with the project's preference for fast builds and minimal dependencies.
-- Migrations are plain SQL files, making them easy to review, version, and run in CI/CD.
-- The team must learn Drizzle's API, but its SQL-like syntax has a low learning curve compared to heavier ORMs.
-- Raw SQL remains available via `drizzle.execute()` for complex queries that don't map well to the query builder.
+- Type safety completa do schema até o resultado da query — sem type casting manual.
+- Drizzle é um dos ORMs mais leves, sem runtime pesado ou code generation.
+- Migrations são SQL puro, fáceis de revisar e versionar.
+- Cada entidade em arquivo separado mantém o schema organizado e facilita code review.
+- Raw SQL disponível via `db.execute()` para queries complexas.

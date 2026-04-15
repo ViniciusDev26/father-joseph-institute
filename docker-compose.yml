@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=father_jose
+      - POSTGRES_PASSWORD=father_jose
+      - POSTGRES_DB=father-database
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./apps/api
+      target: dev
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - DATABASE_URL=postgresql://father_jose:father_jose@postgres:5432/father-database
+    depends_on:
+      - postgres
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/api/src
+          target: /app/src
+        - action: rebuild
+          path: ./apps/api/package.json
+
+  site:
+    build:
+      context: ./apps/site
+      target: dev
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://api:3001
+    depends_on:
+      - api
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/site/src
+          target: /app/src
+        - action: sync
+          path: ./apps/site/public
+          target: /app/public
+        - action: rebuild
+          path: ./apps/site/package.json
+
+volumes:
+  pgdata:
