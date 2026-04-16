@@ -8,7 +8,6 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod';
 import { env } from './env';
-import { contentRoutes } from './routes/content';
 import { eventRoutes } from './routes/events';
 
 const app = Fastify({ logger: true });
@@ -34,7 +33,6 @@ await app.register(scalarApiReference, {
   routePrefix: '/docs',
 });
 
-await app.register(contentRoutes);
 await app.register(eventRoutes);
 
 app.listen({ port: env.PORT, host: '0.0.0.0' }, (err, address) => {

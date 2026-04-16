@@ -1,8 +1,9 @@
 import { z } from 'zod/v4';
+import { mimeTypeSchema } from './shared';
 
 const photoInputSchema = z.object({
   name: z.string(),
-  mimeType: z.enum(['image/png', 'image/jpeg']),
+  mimeType: mimeTypeSchema,
 });
 
 export const createEventBodySchema = z.object({
