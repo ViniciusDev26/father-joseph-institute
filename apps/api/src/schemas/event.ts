@@ -28,3 +28,20 @@ export const createEventResponseSchema = z.object({
   date: z.string(),
   photos: z.array(photoResponseSchema),
 });
+
+const listEventPhotoSchema = z.object({
+  id: z.number(),
+  url: z.string(),
+});
+
+const listEventItemSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  description: z.string().nullable(),
+  date: z.string(),
+  photos: z.array(listEventPhotoSchema),
+});
+
+export const listEventsResponseSchema = z.object({
+  events: z.array(listEventItemSchema),
+});
