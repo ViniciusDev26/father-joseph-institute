@@ -64,6 +64,7 @@ Backend and frontend are independent — they communicate exclusively through AP
 4. **Specs override assumptions.** If a spec says something, follow the spec — even if a "common" pattern would do it differently.
 5. **Flag conflicts.** If a user request contradicts an existing spec, flag the conflict and ask for clarification before proceeding.
 6. **Reference ADRs for the _how_.** Specs define _what_ to build. ADRs in `docs/adr/` define _how_ (patterns, conventions, tech choices). Don't duplicate ADR content in specs.
+7. **Read all ADRs before implementing.** Before writing any code for a feature spec, read all ADRs in the corresponding project directory (e.g., `docs/adr/api/` for API features) to ensure the implementation follows every established convention.
 
 ## Key Conventions
 
