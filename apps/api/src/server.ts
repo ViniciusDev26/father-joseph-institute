@@ -3,13 +3,13 @@ import swagger from '@fastify/swagger';
 import scalarApiReference from '@scalar/fastify-api-reference';
 import Fastify from 'fastify';
 import {
-  type ZodTypeProvider,
   jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
 import { env } from './env';
 import { contentRoutes } from './routes/content';
+import { eventRoutes } from './routes/events';
 
 const app = Fastify({ logger: true });
 
@@ -35,6 +35,7 @@ await app.register(scalarApiReference, {
 });
 
 await app.register(contentRoutes);
+await app.register(eventRoutes);
 
 app.listen({ port: env.PORT, host: '0.0.0.0' }, (err, address) => {
   if (err) {
