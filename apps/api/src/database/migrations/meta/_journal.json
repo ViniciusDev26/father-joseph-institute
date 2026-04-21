@@ -8,6 +8,13 @@
       "when": 1776296366635,
       "tag": "0000_harsh_iron_fist",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1776799498329,
+      "tag": "0001_create_institution",
+      "breakpoints": true
     }
   ]
 }

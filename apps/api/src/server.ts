@@ -9,6 +9,7 @@ import {
 } from 'fastify-type-provider-zod';
 import { env } from './env';
 import { eventRoutes } from './routes/events';
+import { institutionRoutes } from './routes/institution';
 
 const app = Fastify({ logger: true });
 
@@ -34,6 +35,7 @@ await app.register(scalarApiReference, {
 });
 
 await app.register(eventRoutes);
+await app.register(institutionRoutes);
 
 app.listen({ port: env.PORT, host: '0.0.0.0' }, (err, address) => {
   if (err) {
