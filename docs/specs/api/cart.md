@@ -8,6 +8,31 @@
 
 ## Endpoints
 
+### `GET /cart/:sessionId`
+
+> Return the open cart and its items for a given session, with product details.
+
+**Request:**
+
+| Location | Field     | Type   | Required | Description                                            |
+|----------|-----------|--------|----------|--------------------------------------------------------|
+| params   | sessionId | string | yes      | Client-generated UUID identifying the browser session  |
+
+**Response:**
+
+| Status | Description       | Body                                                                                          |
+|--------|-------------------|-----------------------------------------------------------------------------------------------|
+| 200    | Cart found        | `{ cartId, sessionId, items: [{ id, quantity, product: { id, name, price, photoUrl } }] }`   |
+| 404    | No open cart found | `{ message: string }`                                                                        |
+
+**Business rules:**
+
+- Returns the open cart for the session; returns 404 if none exists.
+- Each item includes basic product details: `id`, `name`, `price`, and the first non-deleted photo URL.
+- `photoUrl` is null if the product has no photos.
+
+---
+
 ### `POST /cart/items`
 
 > Add a product to the cart. If the cart for the given session does not exist, it is created automatically. If the product is already in the cart, its quantity is incremented by the provided amount.
