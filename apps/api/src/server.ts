@@ -8,6 +8,7 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod';
 import { env } from './env';
+import { artisanRoutes } from './routes/artisans';
 import { eventRoutes } from './routes/events';
 import { institutionRoutes } from './routes/institution';
 
@@ -34,6 +35,7 @@ await app.register(scalarApiReference, {
   routePrefix: '/docs',
 });
 
+await app.register(artisanRoutes);
 await app.register(eventRoutes);
 await app.register(institutionRoutes);
 

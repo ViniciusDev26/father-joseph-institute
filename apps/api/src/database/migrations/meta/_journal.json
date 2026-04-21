@@ -15,6 +15,13 @@
       "when": 1776799498329,
       "tag": "0001_create_institution",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1776800662828,
+      "tag": "0002_create_artisan",
+      "breakpoints": true
     }
   ]
 }
