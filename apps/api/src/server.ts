@@ -9,6 +9,7 @@ import {
 } from 'fastify-type-provider-zod';
 import { env } from './env';
 import { artisanRoutes } from './routes/artisans';
+import { cartRoutes } from './routes/cart';
 import { eventRoutes } from './routes/events';
 import { institutionRoutes } from './routes/institution';
 import { productRoutes } from './routes/products';
@@ -38,6 +39,7 @@ await app.register(scalarApiReference, {
 });
 
 await app.register(artisanRoutes);
+await app.register(cartRoutes);
 await app.register(eventRoutes);
 await app.register(institutionRoutes);
 await app.register(productRoutes);
