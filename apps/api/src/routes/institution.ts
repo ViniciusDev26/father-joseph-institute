@@ -4,19 +4,28 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { db } from '../database/connection';
 import { institutions } from '../database/schema';
 import {
+  institutionResponseSchema,
   updateInstitutionBodySchema,
-  updateInstitutionResponseSchema,
 } from '../schemas/institution';
 import { errorResponseSchema } from '../schemas/shared';
 import type { UpdateInstitutionBody } from '../types/institution';
 
 export async function institutionRoutes(app: FastifyInstance) {
+  const getInstitutionSchema = {
+    description: "Return the institution's profile data",
+    tags: ['Institution'],
+    response: {
+      200: institutionResponseSchema,
+      404: errorResponseSchema,
+    },
+  };
+
   const updateInstitutionSchema = {
     description: "Update the institution's contact information",
     tags: ['Institution'],
     body: updateInstitutionBodySchema,
     response: {
-      200: updateInstitutionResponseSchema,
+      200: institutionResponseSchema,
       400: errorResponseSchema,
       404: errorResponseSchema,
     },
@@ -24,7 +33,34 @@ export async function institutionRoutes(app: FastifyInstance) {
 
   app
     .withTypeProvider<ZodTypeProvider>()
+    .get('/institution', { schema: getInstitutionSchema }, getInstitution)
     .patch('/institution', { schema: updateInstitutionSchema }, updateInstitution);
+}
+
+async function getInstitution(_request: FastifyRequest, reply: FastifyReply) {
+  const [institution] = await db
+    .select()
+    .from(institutions)
+    .where(isNull(institutions.deletedAt))
+    .limit(1);
+
+  if (!institution) {
+    return reply.status(404).send({
+      statusCode: 404,
+      code: 'INSTITUTION_NOT_FOUND',
+      error: 'Not Found',
+      message: 'Institution not found',
+    });
+  }
+
+  return reply.status(200).send({
+    id: institution.id,
+    name: institution.name,
+    slug: institution.slug,
+    instagram: institution.instagram ?? null,
+    whatsapp: institution.whatsapp ?? null,
+    pixKey: institution.pixKey ?? null,
+  });
 }
 
 async function updateInstitution(

@@ -8,6 +8,28 @@
 
 ## Endpoints
 
+### `GET /institution`
+
+> Return the institution's profile data.
+
+**Request:**
+
+No parameters.
+
+**Response:**
+
+| Status | Description           | Body                                                  |
+|--------|-----------------------|-------------------------------------------------------|
+| 200    | Institution data      | `{ id, name, slug, instagram, whatsapp, pixKey }`     |
+| 404    | Institution not found | `{ message: string }`                                 |
+
+**Business rules:**
+
+- Always targets the single institution record (no ID in the path).
+- Soft-deleted institution is treated as not found.
+
+---
+
 ### `PATCH /institution`
 
 > Update the institution's contact and identity fields. All fields are optional — only provided fields are updated.

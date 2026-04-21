@@ -14,7 +14,7 @@ export const updateInstitutionBodySchema = z
     message: 'At least one field must be provided',
   });
 
-export const updateInstitutionResponseSchema = z.object({
+export const institutionResponseSchema = z.object({
   id: z.number(),
   name: z.string(),
   slug: z.string(),
