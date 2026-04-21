@@ -11,6 +11,7 @@ import { env } from './env';
 import { artisanRoutes } from './routes/artisans';
 import { eventRoutes } from './routes/events';
 import { institutionRoutes } from './routes/institution';
+import { productRoutes } from './routes/products';
 import { volunteerRoutes } from './routes/volunteers';
 
 const app = Fastify({ logger: true });
@@ -39,6 +40,7 @@ await app.register(scalarApiReference, {
 await app.register(artisanRoutes);
 await app.register(eventRoutes);
 await app.register(institutionRoutes);
+await app.register(productRoutes);
 await app.register(volunteerRoutes);
 
 app.listen({ port: env.PORT, host: '0.0.0.0' }, (err, address) => {

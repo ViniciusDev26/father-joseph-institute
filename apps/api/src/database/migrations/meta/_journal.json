@@ -29,6 +29,13 @@
       "when": 1776801505810,
       "tag": "0003_create_volunteer",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1776802938694,
+      "tag": "0004_create_product",
+      "breakpoints": true
     }
   ]
 }
