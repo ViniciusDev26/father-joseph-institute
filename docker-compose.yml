@@ -68,5 +68,23 @@ services:
         - action: rebuild
           path: ./apps/docs/package.json
 
+  admin:
+    build:
+      context: ./apps/admin
+      target: dev
+    ports:
+      - "5174:5174"
+    environment:
+      - VITE_API_URL=http://localhost:3001
+    depends_on:
+      - api
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/admin/src
+          target: /app/src
+        - action: rebuild
+          path: ./apps/admin/package.json
+
 volumes:
   pgdata:
