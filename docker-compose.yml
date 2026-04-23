@@ -52,5 +52,21 @@ services:
         - action: rebuild
           path: ./apps/site/package.json
 
+  docs:
+    build:
+      context: ./apps/docs
+      target: dev
+    ports:
+      - "5173:5173"
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/docs
+          target: /app
+          ignore:
+            - .vitepress/dist
+        - action: rebuild
+          path: ./apps/docs/package.json
+
 volumes:
   pgdata:

@@ -5,7 +5,7 @@ Registro das decisões arquiteturais do projeto. Cada ADR documenta o contexto, 
 ## Estrutura
 
 ```
-docs/adr/
+apps/docs/adr/
 ├── NNN-slug.md      # Decisões globais (afetam todo o monorepo)
 ├── api/
 │   └── NNN-slug.md  # Decisões específicas da API
@@ -15,40 +15,8 @@ docs/adr/
     └── NNN-slug.md  # Decisões específicas do admin
 ```
 
-- **Raiz (`docs/adr/`)** — decisões que afetam o monorepo como um todo
+- **Raiz (`apps/docs/adr/`)** — decisões que afetam o monorepo como um todo
 - **Subdiretórios (`api/`, `site/`, `admin/`)** — decisões específicas de cada projeto
-
-## Formato
-
-Cada ADR segue este template:
-
-```markdown
-# ADR-NNN: Título da decisão
-
-**Status:** Accepted | Deprecated | Superseded by ADR-XXX  
-**Date:** YYYY-MM-DD
-
-## Context
-Por que essa decisão precisou ser tomada.
-
-## Decision
-O que foi decidido.
-
-## Consequences
-O que resulta dessa decisão — trade-offs, impactos, dependências.
-```
-
-## Numeração
-
-- Cada escopo (raiz, api, site, admin) tem numeração independente começando em `001`
-- O slug deve ser em inglês, separado por hífens: `001-nome-da-decisao.md`
-
-## Quando criar uma ADR
-
-- Escolha de tecnologia, framework ou biblioteca
-- Definição de padrão arquitetural ou convenção
-- Decisão que impacta a estrutura do projeto ou fluxo de deploy
-- Trade-off consciente que precisa ficar documentado para o futuro
 
 ## Índice
 
@@ -62,6 +30,7 @@ O que resulta dessa decisão — trade-offs, impactos, dependências.
 | [004](004-postgresql-database.md) | PostgreSQL como banco de dados |
 | [005](005-zod-env-validation.md) | Zod para validação de variáveis de ambiente |
 | [006](006-turborepo.md) | Turborepo como orquestrador do monorepo |
+| [007](007-typescript.md) | TypeScript 6 como linguagem padrão |
 
 ### API
 
@@ -73,6 +42,13 @@ O que resulta dessa decisão — trade-offs, impactos, dependências.
 | [004](api/004-drizzle-orm.md) | Drizzle como ORM |
 | [005](api/005-api-docs-scalar.md) | Documentação da API com Scalar |
 | [006](api/006-zod-type-provider.md) | Zod como type provider do Fastify |
+| [007](api/007-paranoid-soft-delete.md) | Colunas padrão e Soft Delete |
+| [008](api/008-postgres-enums.md) | Enums do PostgreSQL |
+| [009](api/009-mandatory-route-schema.md) | Schema obrigatório em todas as rotas |
+| [010](api/010-route-handler-separation.md) | Separação entre rota e handler |
+| [011](api/011-route-schema-constant.md) | Schema extraído em constante |
+| [012](api/012-route-registration-order.md) | Ordem de registro por método HTTP |
+| [013](api/013-production-seed-strategy.md) | Estratégia de seed de produção |
 
 ### Site
 
@@ -83,7 +59,3 @@ O que resulta dessa decisão — trade-offs, impactos, dependências.
 | [003](site/003-design-system.md) | Design system editorial |
 | [004](site/004-centralized-routes.md) | Rotas centralizadas |
 | [005](site/005-api-driven-content.md) | Conteúdo consumido da API |
-
-### Admin
-
-Nenhuma decisão registrada ainda.

@@ -9,7 +9,7 @@
 | id | serial | no | auto | Primary key |
 | ... | ... | ... | ... | ... |
 
-> Standard columns (`created_at`, `updated_at`, `deleted_at`) are inherited per [ADR-007](../../adr/api/007-paranoid-soft-delete.md) and should not be listed here.
+> Standard columns (`created_at`, `updated_at`, `deleted_at`) are inherited per [ADR-007](../../../adr/api/007-paranoid-soft-delete.md) and should not be listed here.
 
 ## Relations
 

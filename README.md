@@ -8,10 +8,8 @@ Monorepo do projeto Instituto Padre José — organização que ajuda moradores 
 apps/
 ├── site/    # Site institucional (Next.js 16 + Tailwind CSS 4)
 ├── api/     # API REST (Fastify 5 + Bun)
+├── docs/    # Site de documentação (VitePress)
 └── admin/   # Painel administrativo (a definir)
-docs/
-├── IDEA.md  # Visão geral do projeto
-└── adr/     # Architecture Decision Records
 ```
 
 ## Stack
@@ -22,6 +20,7 @@ docs/
 | Monorepo | Turborepo |
 | Site | Next.js, Tailwind CSS, TypeScript |
 | API | Fastify, TypeScript, Zod |
+| Docs | VitePress |
 | Linter / Formatter | Biome |
 
 ## Pré-requisitos
@@ -47,6 +46,7 @@ Rodar um projeto específico:
 ```bash
 bunx turbo run dev --filter=site
 bunx turbo run dev --filter=api
+bunx turbo run dev --filter=docs
 ```
 
 ## Build
@@ -71,11 +71,16 @@ docker run -p 3001:3001 father-joseph-api
 # Site
 docker build -t father-joseph-site apps/site
 docker run -p 3000:3000 -e API_URL=http://host.docker.internal:3001 father-joseph-site
+
+# Docs
+bunx turbo run build --filter=docs
+bunx turbo run dev --filter=docs
 ```
 
 ## Documentação
 
-- [Ideia do projeto](docs/IDEA.md)
-- [ADRs globais](docs/adr/)
-- [ADRs do site](docs/adr/site/)
-- [ADRs da API](docs/adr/api/)
+- [Ideia do projeto](apps/docs/IDEA.md)
+- [ADRs globais](apps/docs/adr/)
+- [ADRs do site](apps/docs/adr/site/)
+- [ADRs da API](apps/docs/adr/api/)
+- [Site da documentação](apps/docs/)

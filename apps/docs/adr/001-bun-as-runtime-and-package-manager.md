@@ -12,7 +12,7 @@ The monorepo needs a consistent runtime and package manager across all projects 
 Use Bun as the sole runtime and package manager for the entire monorepo:
 
 - **Package management:** `bun install`, `bun add`, `bun remove` — no npm, yarn, or pnpm
-- **Script execution:** `bun run <script>` for all package.json scripts
+- **Script execution:** `bun run [script]` for all package.json scripts
 - **TypeScript execution:** `bun --watch` for dev servers (API)
 - **Build:** `bun build --compile` for standalone binaries (API)
 - **Docker images:** `oven/bun` as base image in all Dockerfiles
