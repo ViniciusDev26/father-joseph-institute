@@ -51,6 +51,7 @@ apps/docs/adr/
 | [013](api/013-production-seed-strategy.md) | Estratégia de seed de produção |
 | [014](api/014-basic-authentication.md) | Estratégia de Autenticação Basic |
 | [015](api/015-npm-save-exact.md) | Uso de Versões Exatas (save-exact) |
+| [016](api/016-cors-configuration.md) | Configuração de CORS |
 
 ### Site
 
@@ -61,3 +62,13 @@ apps/docs/adr/
 | [003](site/003-design-system.md) | Design system editorial |
 | [004](site/004-centralized-routes.md) | Rotas centralizadas |
 | [005](site/005-api-driven-content.md) | Conteúdo consumido da API |
+
+### Admin
+
+| ADR | Decisão |
+|-----|---------|
+| [016](admin/016-admin-frontend-vite.md) | Arquitetura do Painel Administrativo (Vite+React) |
+| [017](admin/017-zustand-state-management.md) | Gerenciamento de Estado com Zustand |
+| [018](admin/018-react-hook-form-zod.md) | Padronização de Formulários com RHF+Zod |
+| [019](admin/019-shadcn-ui.md) | Componentização com shadcn/ui |
+| [020](admin/020-docker-deployment.md) | Estratégia de Build e Deploy (Docker + nginx) |

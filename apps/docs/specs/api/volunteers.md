@@ -1,12 +1,46 @@
 # API: Volunteers
 
-> Endpoint for volunteer registration.
+> Endpoints for volunteer management.
 
 ## Base path
 
 `/volunteers`
 
 ## Endpoints
+
+### `GET /volunteers`
+
+> List all registered volunteers. Requires authentication.
+
+**Request:**
+
+No parameters.
+
+**Response:**
+
+| Status | Description     | Body                      |
+|--------|-----------------|---------------------------|
+| 200    | Volunteer list  | `{ volunteers: [...] }`   |
+| 401    | Unauthorized    | `{ message: string }`     |
+
+**Response body — `volunteers[]`:**
+
+| Field                     | Type     | Description              |
+|---------------------------|----------|--------------------------|
+| id                        | number   | Volunteer ID             |
+| name                      | string   | Full name                |
+| profession                | string   | Profession               |
+| availability.days         | string[] | Registered weekdays      |
+| availability.startTime    | string   | Start time in `HH:MM`   |
+| availability.endTime      | string   | End time in `HH:MM`     |
+
+**Business rules:**
+
+- Requires valid Basic Auth credentials.
+- Returns all non-deleted volunteers.
+- Returns an empty array when no volunteers exist.
+
+---
 
 ### `POST /volunteers`
 
