@@ -9,7 +9,7 @@ import {
 } from 'fastify-type-provider-zod';
 import { env } from './env';
 import { artisanRoutes } from './routes/artisans';
-import { authRoutes } from './routes/auth';
+import { authProvider, authRoutes } from './routes/auth';
 import { cartRoutes } from './routes/cart';
 import { eventRoutes } from './routes/events';
 import { institutionRoutes } from './routes/institution';
@@ -18,7 +18,7 @@ import { volunteerRoutes } from './routes/volunteers';
 
 declare module 'fastify' {
   export interface FastifyInstance {
-    authenticate: (request: import('fastify').FastifyRequest, reply: import('fastify').FastifyReply) => Promise<void>;
+    authenticate: import('fastify').preHandlerHookHandler;
   }
 }
 
@@ -44,6 +44,9 @@ await app.register(swagger, {
 await app.register(scalarApiReference, {
   routePrefix: '/docs',
 });
+
+// Register all providers first (if any), then all routes
+await app.register(authProvider);
 
 await app.register(authRoutes);
 await app.register(artisanRoutes);
