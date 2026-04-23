@@ -14,6 +14,21 @@ const availabilitySchema = z
     message: 'endTime must be after startTime',
   });
 
+export const listVolunteersResponseSchema = z.object({
+  volunteers: z.array(
+    z.object({
+      id: z.number(),
+      name: z.string(),
+      profession: z.string(),
+      availability: z.object({
+        days: z.array(z.string()),
+        startTime: z.string(),
+        endTime: z.string(),
+      }),
+    }),
+  ),
+});
+
 export const registerVolunteerBodySchema = z.object({
   name: z.string().max(255),
   profession: z.string().max(255),

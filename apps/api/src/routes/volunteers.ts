@@ -4,6 +4,7 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { db } from '../database/connection';
 import { institutions, volunteers } from '../database/schema';
 import {
+  listVolunteersResponseSchema,
   registerVolunteerBodySchema,
   registerVolunteerResponseSchema,
 } from '../schemas/volunteer';
@@ -27,6 +28,14 @@ function buildWhatsappUrl(whatsapp: string, name: string, profession: string, da
 }
 
 export async function volunteerRoutes(app: FastifyInstance) {
+  const listVolunteersSchema = {
+    description: 'List all volunteers',
+    tags: ['Volunteers'],
+    response: {
+      200: listVolunteersResponseSchema,
+    },
+  };
+
   const registerVolunteerSchema = {
     description: 'Register a new volunteer and get a pre-filled WhatsApp URL',
     tags: ['Volunteers'],
@@ -40,7 +49,24 @@ export async function volunteerRoutes(app: FastifyInstance) {
 
   app
     .withTypeProvider<ZodTypeProvider>()
+    .get('/volunteers', { schema: listVolunteersSchema, preHandler: [app.authenticate] }, listVolunteers)
     .post('/volunteers', { schema: registerVolunteerSchema }, registerVolunteer);
+}
+
+async function listVolunteers(_request: FastifyRequest, reply: FastifyReply) {
+  const rows = await db
+    .select()
+    .from(volunteers)
+    .where(isNull(volunteers.deletedAt));
+
+  return reply.status(200).send({
+    volunteers: rows.map((v) => ({
+      id: v.id,
+      name: v.name,
+      profession: v.profession,
+      availability: v.availability,
+    })),
+  });
 }
 
 async function registerVolunteer(
