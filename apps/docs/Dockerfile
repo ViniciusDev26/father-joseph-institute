@@ -3,7 +3,7 @@ FROM oven/bun:1.2-alpine AS dev
 
 WORKDIR /app
 
-# Copy app package.json
+# Em contexto de apps/docs, o package.json local é o ./package.json
 COPY package.json bun.lock* ./
 
 # Install dependencies
@@ -22,28 +22,27 @@ FROM oven/bun:1.2-alpine AS builder
 
 WORKDIR /app
 
-# Copy monorepo config
-COPY package.json bun.lock turbo.json biome.json ./
-# Copy app package.json
-COPY apps/docs/package.json ./apps/docs/
+# Para build monorepo-aware, precisaríamos do contexto na raiz.
+# Como o docker-compose usa apps/docs como contexto, vamos simplificar o build
+# para ser local ao app, o que é mais rápido e consistente com os outros serviços.
 
-# Install dependencies
+COPY package.json bun.lock* ./
 RUN bun install --frozen-lockfile
 
-# Copy source code
-COPY apps/docs ./apps/docs
+COPY . .
 
-# Build the documentation
-RUN bunx turbo run build --filter=docs
+# Build local sem depender do turbo se estivermos dentro da pasta
+RUN bun run build
 
 # Stage 3: Serve (Production)
 FROM nginx:alpine
 
 # Copy the custom nginx config for cleanUrls
-COPY apps/docs/nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy static files from builder
-COPY --from=builder /app/apps/docs/.vitepress/dist /usr/share/nginx/html
+# O VitePress gera em .vitepress/dist relativo à raiz do app docs
+COPY --from=builder /app/.vitepress/dist /usr/share/nginx/html
 
 EXPOSE 80
 
