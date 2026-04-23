@@ -31,7 +31,7 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
             className={({ isActive }) =>
               `flex items-center px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-blue-50 text-blue-700'
+                  ? 'bg-primary/10 text-primary font-semibold'
                   : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`
             }
