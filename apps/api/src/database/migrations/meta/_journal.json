@@ -43,6 +43,13 @@
       "when": 1776803710994,
       "tag": "0005_create_cart",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1776986852450,
+      "tag": "0006_thin_centennial",
+      "breakpoints": true
     }
   ]
 }

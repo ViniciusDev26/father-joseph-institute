@@ -3,10 +3,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { db } from '../database/connection';
 import { institutions } from '../database/schema';
-import {
-  institutionResponseSchema,
-  updateInstitutionBodySchema,
-} from '../schemas/institution';
+import { institutionResponseSchema, updateInstitutionBodySchema } from '../schemas/institution';
 import { errorResponseSchema } from '../schemas/shared';
 import type { UpdateInstitutionBody } from '../types/institution';
 
@@ -44,6 +41,23 @@ export async function institutionRoutes(app: FastifyInstance) {
     );
 }
 
+function toResponse(institution: typeof institutions.$inferSelect) {
+  return {
+    id: institution.id,
+    name: institution.name,
+    slug: institution.slug,
+    instagram: institution.instagram ?? null,
+    whatsapp: institution.whatsapp ?? null,
+    pixKey: institution.pixKey ?? null,
+    addressStreet: institution.addressStreet ?? null,
+    addressComplement: institution.addressComplement ?? null,
+    addressNeighborhood: institution.addressNeighborhood ?? null,
+    addressCity: institution.addressCity ?? null,
+    addressState: institution.addressState ?? null,
+    addressZip: institution.addressZip ?? null,
+  };
+}
+
 async function getInstitution(_request: FastifyRequest, reply: FastifyReply) {
   const [institution] = await db
     .select()
@@ -60,21 +74,24 @@ async function getInstitution(_request: FastifyRequest, reply: FastifyReply) {
     });
   }
 
-  return reply.status(200).send({
-    id: institution.id,
-    name: institution.name,
-    slug: institution.slug,
-    instagram: institution.instagram ?? null,
-    whatsapp: institution.whatsapp ?? null,
-    pixKey: institution.pixKey ?? null,
-  });
+  return reply.status(200).send(toResponse(institution));
 }
 
 async function updateInstitution(
   request: FastifyRequest<{ Body: UpdateInstitutionBody }>,
   reply: FastifyReply,
 ) {
-  const { instagram, whatsapp, pixKey } = request.body;
+  const {
+    instagram,
+    whatsapp,
+    pixKey,
+    addressStreet,
+    addressComplement,
+    addressNeighborhood,
+    addressCity,
+    addressState,
+    addressZip,
+  } = request.body;
 
   const [institution] = await db
     .select()
@@ -97,16 +114,16 @@ async function updateInstitution(
       ...(instagram !== undefined && { instagram }),
       ...(whatsapp !== undefined && { whatsapp }),
       ...(pixKey !== undefined && { pixKey }),
+      ...(addressStreet !== undefined && { addressStreet }),
+      ...(addressComplement !== undefined && { addressComplement }),
+      ...(addressNeighborhood !== undefined && { addressNeighborhood }),
+      ...(addressCity !== undefined && { addressCity }),
+      ...(addressState !== undefined && { addressState }),
+      ...(addressZip !== undefined && { addressZip }),
       updatedAt: new Date(),
     })
+    .where(isNull(institutions.deletedAt))
     .returning();
 
-  return reply.status(200).send({
-    id: updated.id,
-    name: updated.name,
-    slug: updated.slug,
-    instagram: updated.instagram ?? null,
-    whatsapp: updated.whatsapp ?? null,
-    pixKey: updated.pixKey ?? null,
-  });
+  return reply.status(200).send(toResponse(updated));
 }
