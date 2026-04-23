@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Albert_Sans, Fraunces } from 'next/font/google';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
@@ -15,6 +15,11 @@ const albertSans = Albert_Sans({
   variable: '--font-albert-sans',
   display: 'swap',
 });
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   title: {
