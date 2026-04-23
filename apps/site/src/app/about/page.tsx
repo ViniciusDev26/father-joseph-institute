@@ -4,6 +4,8 @@ import { FadeIn } from '@/components/fade-in';
 import { fetchContent } from '@/lib/api';
 import { routes } from '@/lib/routes';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Quem Somos',
 };
