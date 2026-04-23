@@ -11,6 +11,7 @@ import {
 } from '@/schemas/institution';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FadeIn } from '@/components/FadeIn';
 import {
   Form,
   FormControl,
@@ -71,98 +72,104 @@ export function InstitutionEdit() {
     }
   };
 
-  if (loading) return <div className="p-8 text-sm text-muted-foreground">Carregando...</div>;
-  if (fetchError) return <div className="p-8 text-sm text-destructive">{fetchError}</div>;
+  if (loading) return <div className="p-4 md:p-8 text-sm text-muted-foreground">Carregando...</div>;
+  if (fetchError) return <div className="p-4 md:p-8 text-sm text-destructive">{fetchError}</div>;
 
   return (
-    <div className="p-8 max-w-xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Instituição</h1>
-        <p className="text-sm text-muted-foreground mt-1">Atualize os dados de contato da instituição</p>
-      </div>
+    <div className="p-4 md:p-8">
+      <FadeIn>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-foreground">Instituição</h1>
+          <p className="text-sm text-muted-foreground mt-1">Atualize os dados de contato da instituição</p>
+        </div>
+      </FadeIn>
 
       {institution && (
-        <div className="bg-muted/50 rounded-lg border border-border px-4 py-3 mb-6 space-y-1">
-          <p className="text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">Nome:</span> {institution.name}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">Slug:</span> {institution.slug}
-          </p>
-        </div>
+        <FadeIn delay={60}>
+          <div className="bg-muted/50 rounded-lg border border-border px-4 py-3 mb-6 space-y-1 max-w-xl">
+            <p className="text-sm text-muted-foreground">
+              <span className="font-medium text-foreground">Nome:</span> {institution.name}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              <span className="font-medium text-foreground">Slug:</span> {institution.slug}
+            </p>
+          </div>
+        </FadeIn>
       )}
 
-      <div className="bg-card rounded-lg border border-border p-6">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FormField
-              control={form.control}
-              name="instagram"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Instagram</FormLabel>
-                  <FormControl>
-                    <div className="flex items-center">
-                      <span className="inline-flex items-center rounded-l-md border border-r-0 border-input bg-muted px-3 py-2 text-sm text-muted-foreground h-10">
-                        @
-                      </span>
-                      <Input
-                        className="rounded-l-none"
-                        placeholder="institutopадrejose"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+      <FadeIn delay={120}>
+        <div className="bg-card rounded-lg border border-border p-4 md:p-6 max-w-xl">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+              <FormField
+                control={form.control}
+                name="instagram"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Instagram</FormLabel>
+                    <FormControl>
+                      <div className="flex items-center">
+                        <span className="inline-flex items-center rounded-l-md border border-r-0 border-input bg-muted px-3 py-2 text-sm text-muted-foreground h-10">
+                          @
+                        </span>
+                        <Input
+                          className="rounded-l-none"
+                          placeholder="institutopадrejose"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="whatsapp"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>WhatsApp</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Apenas dígitos (ex: 85912345678)" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="pixKey"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Chave PIX</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Telefone, CPF, e-mail ou chave aleatória" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {apiError && (
+                <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{apiError}</p>
               )}
-            />
-
-            <FormField
-              control={form.control}
-              name="whatsapp"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>WhatsApp</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Apenas dígitos (ex: 85912345678)" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+              {success && (
+                <p className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
+                  Dados atualizados com sucesso.
+                </p>
               )}
-            />
 
-            <FormField
-              control={form.control}
-              name="pixKey"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Chave PIX</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Telefone, CPF, e-mail ou chave aleatória" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {apiError && (
-              <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{apiError}</p>
-            )}
-            {success && (
-              <p className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
-                Dados atualizados com sucesso.
-              </p>
-            )}
-
-            <div className="pt-2">
-              <Button type="submit" disabled={submitting}>
-                {submitting ? 'Salvando...' : 'Salvar alterações'}
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </div>
+              <div className="pt-2">
+                <Button type="submit" disabled={submitting} className="w-full sm:w-auto">
+                  {submitting ? 'Salvando...' : 'Salvar alterações'}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </div>
+      </FadeIn>
     </div>
   );
 }

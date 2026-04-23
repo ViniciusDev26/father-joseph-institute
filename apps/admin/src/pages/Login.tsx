@@ -49,10 +49,7 @@ export function Login() {
         style={{ backgroundColor: '#3d2b1f' }}
       >
         <div>
-          <div
-            className="inline-flex items-center justify-center w-12 h-12 rounded-xl text-white font-bold text-xl"
-            style={{ backgroundColor: '#c8855a' }}
-          >
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground font-bold text-xl">
             IPJ
           </div>
         </div>
@@ -76,10 +73,7 @@ export function Login() {
         <div className="w-full max-w-sm space-y-8">
           {/* Header mobile */}
           <div className="lg:hidden text-center">
-            <div
-              className="inline-flex items-center justify-center w-12 h-12 rounded-xl text-white font-bold text-xl mb-4"
-              style={{ backgroundColor: '#c8855a' }}
-            >
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground font-bold text-xl mb-4">
               IPJ
             </div>
           </div>
@@ -142,7 +136,6 @@ export function Login() {
                 type="submit"
                 disabled={form.formState.isSubmitting}
                 className="w-full"
-                style={{ backgroundColor: '#c8855a' }}
               >
                 {form.formState.isSubmitting ? 'Entrando...' : 'Entrar'}
               </Button>

@@ -62,6 +62,7 @@ apps/docs/adr/
 | [003](site/003-design-system.md) | Design system editorial |
 | [004](site/004-centralized-routes.md) | Rotas centralizadas |
 | [005](site/005-api-driven-content.md) | Conteúdo consumido da API |
+| [006](site/006-mobile-first.md) | Mobile First no Site Público |
 
 ### Admin
 
@@ -72,3 +73,4 @@ apps/docs/adr/
 | [018](admin/018-react-hook-form-zod.md) | Padronização de Formulários com RHF+Zod |
 | [019](admin/019-shadcn-ui.md) | Componentização com shadcn/ui |
 | [020](admin/020-docker-deployment.md) | Estratégia de Build e Deploy (Docker + nginx) |
+| [021](admin/021-mobile-first.md) | Mobile First no Painel Administrativo |
