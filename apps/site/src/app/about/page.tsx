@@ -1,17 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FadeIn } from '@/components/fade-in';
-import { fetchContent } from '@/lib/api';
+import content from '@/content.json';
 import { routes } from '@/lib/routes';
-
-export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Quem Somos',
 };
 
-export default async function AboutPage() {
-  const { about } = await fetchContent();
+export default function AboutPage() {
+  const { about } = content;
 
   return (
     <>

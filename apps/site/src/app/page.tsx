@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { FadeIn } from '@/components/fade-in';
+import content from '@/content.json';
 import { routes } from '@/lib/routes';
 
 export default function HomePage() {
+  const { home } = content;
+
   return (
     <section className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
       <FadeIn>
@@ -10,17 +13,15 @@ export default function HomePage() {
           Instituto Padre José
         </h1>
       </FadeIn>
-      <FadeIn delay={150}>
-        <p className="mx-auto mt-6 max-w-lg text-lg text-bark-light">
-          [Frase de apresentação do instituto na página inicial]
-        </p>
+      <FadeIn delay={150} className="mt-6">
+        <p className="mx-auto max-w-lg text-lg text-bark-light">{home.subtitle}</p>
       </FadeIn>
-      <FadeIn delay={280}>
+      <FadeIn delay={280} className="mt-8">
         <Link
           href={routes.about}
-          className="mt-8 rounded-full bg-terracotta px-8 py-3 font-medium text-cream transition-colors hover:bg-terracotta-dark"
+          className="rounded-full bg-terracotta px-8 py-3 font-medium text-cream transition-colors hover:bg-terracotta-dark"
         >
-          Conheça nossa história
+          {home.cta}
         </Link>
       </FadeIn>
     </section>

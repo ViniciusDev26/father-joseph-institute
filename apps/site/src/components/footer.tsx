@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import content from '@/content.json';
 import { routes } from '@/lib/routes';
 
 const quickLinks = [
@@ -22,9 +23,7 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
           <div>
             <h3 className="font-display text-xl font-semibold text-cream">Instituto Padre José</h3>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed">
-              [Breve descrição do instituto no rodapé]
-            </p>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed">{content.footer.description}</p>
           </div>
 
           <div>
@@ -59,9 +58,9 @@ export function Footer() {
               <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-cream/50">
                 Contato
               </h4>
-              <p className="text-sm">[Endereço]</p>
-              <p className="text-sm">[Telefone]</p>
-              <p className="text-sm">[Email]</p>
+              <Link href={routes.contact} className="text-sm transition-colors hover:text-cream">
+                Ver informações de contato →
+              </Link>
             </div>
           </div>
         </div>

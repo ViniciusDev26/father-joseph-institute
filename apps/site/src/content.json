@@ -1,0 +1,181 @@
+{
+  "home": {
+    "subtitle": "Transformando vidas com amor e dignidade — ajudamos moradores de rua e valorizamos o trabalho de artesãs da nossa comunidade.",
+    "cta": "Conheça nossa história"
+  },
+  "about": {
+    "hero": {
+      "tag": "Nossa história",
+      "title": "Quem Somos",
+      "subtitle": "Há mais de uma década, o Instituto Padre José trabalha para transformar realidades, acolhendo moradores de rua e dando visibilidade às artesãs da comunidade."
+    },
+    "mission": {
+      "quote": "Servir ao próximo com amor, dignidade e esperança — porque toda vida tem valor."
+    },
+    "story": {
+      "tag": "Como tudo começou",
+      "title": "Uma missão nascida da compaixão",
+      "paragraphs": [
+        "O Instituto Padre José nasceu do sonho de um sacerdote que acreditava que a caridade é mais do que entregar alimentos — é restaurar a dignidade de cada pessoa.",
+        "Ao longo dos anos, crescemos e nos tornamos um espaço de acolhimento, capacitação e arte, onde mulheres artesãs encontram um lugar para brilhar e moradores de rua encontram um recomeço.",
+        "Hoje, somos uma comunidade unida pela fé, pelo amor ao próximo e pela crença de que, juntos, podemos mudar vidas."
+      ]
+    },
+    "values": {
+      "tag": "O que nos move",
+      "title": "Nossos valores",
+      "items": [
+        {
+          "title": "Dignidade",
+          "description": "Toda pessoa merece ser tratada com respeito e cuidado, independentemente de sua situação."
+        },
+        {
+          "title": "Solidariedade",
+          "description": "Acreditamos que a transformação acontece quando nos unimos em torno de um bem comum."
+        },
+        {
+          "title": "Arte e Cultura",
+          "description": "Valorizamos o trabalho artesanal como expressão de identidade, talento e autonomia."
+        },
+        {
+          "title": "Esperança",
+          "description": "Cada ação é um passo em direção a um futuro mais justo e amoroso para todos."
+        }
+      ]
+    },
+    "impact": {
+      "tag": "Nosso impacto",
+      "title": "Números que transformam",
+      "stats": [
+        { "value": "500+", "label": "Pessoas atendidas por mês" },
+        { "value": "30+", "label": "Artesãs apoiadas" },
+        { "value": "10+", "label": "Anos de história" },
+        { "value": "100+", "label": "Voluntários ativos" }
+      ]
+    },
+    "cta": {
+      "tag": "Faça parte",
+      "title": "Você pode fazer a diferença",
+      "description": "Seja como voluntário, doador ou compartilhando nossa causa — cada gesto conta na construção de um mundo mais humano."
+    }
+  },
+  "artisans": {
+    "hero": {
+      "tag": "Talento e identidade",
+      "title": "Nossas Artesãs",
+      "subtitle": "Conheça as mulheres que transformam amor e habilidade em arte. Cada peça conta uma história de superação e criatividade."
+    },
+    "empty": "Em breve apresentaremos nossas artesãs. Volte em breve!",
+    "error": "Não foi possível carregar as artesãs. Tente novamente mais tarde."
+  },
+  "events": {
+    "hero": {
+      "tag": "Momentos especiais",
+      "title": "Eventos",
+      "subtitle": "Acompanhe as atividades, feiras e encontros promovidos pelo Instituto Padre José."
+    },
+    "empty": "Nenhum evento cadastrado no momento. Fique de olho nas novidades!",
+    "error": "Não foi possível carregar os eventos. Tente novamente mais tarde."
+  },
+  "products": {
+    "hero": {
+      "tag": "Arte feita com amor",
+      "title": "Nossos Produtos",
+      "subtitle": "Cada produto é feito à mão pelas artesãs do instituto. Ao comprar, você apoia diretamente o trabalho delas."
+    },
+    "empty": "Nenhum produto disponível no momento. Volte em breve!",
+    "error": "Não foi possível carregar os produtos. Tente novamente mais tarde.",
+    "by": "por"
+  },
+  "shop": {
+    "hero": {
+      "tag": "Loja solidária",
+      "title": "Loja Virtual",
+      "subtitle": "Escolha os produtos e finalize o pedido via WhatsApp. Cada compra apoia diretamente as artesãs do instituto."
+    },
+    "addToCart": "Adicionar",
+    "cart": {
+      "title": "Seu carrinho",
+      "empty": "Seu carrinho está vazio.",
+      "checkout": "Finalizar via WhatsApp",
+      "total": "Total",
+      "remove": "Remover"
+    },
+    "empty": "Nenhum produto disponível no momento.",
+    "error": "Não foi possível carregar os produtos."
+  },
+  "volunteer": {
+    "hero": {
+      "tag": "Junte-se a nós",
+      "title": "Seja Voluntário",
+      "subtitle": "Dedique um pouco do seu tempo a quem mais precisa. Sua presença faz toda a diferença."
+    },
+    "form": {
+      "name": "Nome completo",
+      "namePlaceholder": "Seu nome",
+      "profession": "Profissão",
+      "professionPlaceholder": "Sua profissão ou área de atuação",
+      "availability": "Disponibilidade",
+      "days": "Dias disponíveis",
+      "startTime": "Horário de início",
+      "endTime": "Horário de término",
+      "submit": "Quero ser voluntário",
+      "submitting": "Enviando..."
+    },
+    "days": {
+      "monday": "Segunda-feira",
+      "tuesday": "Terça-feira",
+      "wednesday": "Quarta-feira",
+      "thursday": "Quinta-feira",
+      "friday": "Sexta-feira",
+      "saturday": "Sábado",
+      "sunday": "Domingo"
+    },
+    "success": {
+      "title": "Obrigado pelo interesse!",
+      "description": "Clique no botão abaixo para continuar o contato via WhatsApp e combinarmos os detalhes.",
+      "button": "Continuar no WhatsApp"
+    },
+    "error": "Ocorreu um erro ao enviar seu cadastro. Tente novamente."
+  },
+  "contact": {
+    "hero": {
+      "tag": "Fale conosco",
+      "title": "Contato",
+      "subtitle": "Estamos aqui para ajudar. Entre em contato pelo WhatsApp ou pelas nossas redes sociais."
+    },
+    "whatsapp": "WhatsApp",
+    "instagram": "Instagram",
+    "address": {
+      "title": "Endereço",
+      "value": "[Endereço do Instituto]"
+    },
+    "notFound": "Informações de contato não disponíveis no momento. Tente novamente mais tarde."
+  },
+  "donations": {
+    "hero": {
+      "tag": "Faça a diferença",
+      "title": "Caixinha Solidária",
+      "subtitle": "Sua doação ajuda a manter os programas do instituto, alimentar famílias e apoiar as artesãs da comunidade."
+    },
+    "pix": {
+      "title": "Doe via PIX",
+      "copy": "Copiar chave PIX",
+      "copied": "Copiado!",
+      "instruction": "Abra o aplicativo do seu banco, acesse a opção PIX e cole a chave abaixo para fazer sua doação."
+    },
+    "notFound": "Chave PIX não disponível no momento. Entre em contato conosco pelo WhatsApp.",
+    "impact": {
+      "title": "Como sua doação ajuda",
+      "items": [
+        "Refeições diárias para moradores de rua",
+        "Material para as artesãs",
+        "Eventos e oficinas comunitárias",
+        "Manutenção do espaço do instituto"
+      ]
+    }
+  },
+  "footer": {
+    "description": "Ajudando moradores de rua e valorizando o trabalho de artesãs há mais de uma década."
+  }
+}
