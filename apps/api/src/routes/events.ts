@@ -35,7 +35,14 @@ export async function eventRoutes(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .get('/events', { schema: listEventsSchema }, listEvents)
-    .post('/events', { schema: createEventSchema }, createEvent);
+    .post(
+      '/events',
+      {
+        schema: createEventSchema,
+        preHandler: [app.authenticate],
+      },
+      createEvent,
+    );
 }
 
 async function listEvents(_request: FastifyRequest, reply: FastifyReply) {

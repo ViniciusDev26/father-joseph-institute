@@ -7,6 +7,7 @@ This directory is the **single source of truth** for what the application should
 ### API (Contracts)
 
 - [Artisans](./api/artisans.md)
+- [Auth](./api/auth.md)
 - [Cart](./api/cart.md)
 - [Events](./api/events.md)
 - [Institution](./api/institution.md)
@@ -39,6 +40,7 @@ This directory is the **single source of truth** for what the application should
 - [List Products](./backend/features/list-products.md)
 - [Register Volunteer](./backend/features/register-volunteer.md)
 - [Update Institution](./backend/features/update-institution.md)
+- [Validate Auth](./backend/features/validate-auth.md)
 
 ## Structure
 

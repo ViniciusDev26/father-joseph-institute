@@ -36,7 +36,14 @@ export async function productRoutes(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .get('/products', { schema: listProductsSchema }, listProducts)
-    .post('/products', { schema: createProductSchema }, createProduct);
+    .post(
+      '/products',
+      {
+        schema: createProductSchema,
+        preHandler: [app.authenticate],
+      },
+      createProduct,
+    );
 }
 
 async function listProducts(_request: FastifyRequest, reply: FastifyReply) {

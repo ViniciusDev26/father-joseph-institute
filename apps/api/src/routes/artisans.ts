@@ -34,7 +34,14 @@ export async function artisanRoutes(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .get('/artisans', { schema: listArtisansSchema }, listArtisans)
-    .post('/artisans', { schema: createArtisanSchema }, createArtisan);
+    .post(
+      '/artisans',
+      {
+        schema: createArtisanSchema,
+        preHandler: [app.authenticate],
+      },
+      createArtisan,
+    );
 }
 
 async function listArtisans(_request: FastifyRequest, reply: FastifyReply) {

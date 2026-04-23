@@ -34,7 +34,14 @@ export async function institutionRoutes(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .get('/institution', { schema: getInstitutionSchema }, getInstitution)
-    .patch('/institution', { schema: updateInstitutionSchema }, updateInstitution);
+    .patch(
+      '/institution',
+      {
+        schema: updateInstitutionSchema,
+        preHandler: [app.authenticate],
+      },
+      updateInstitution,
+    );
 }
 
 async function getInstitution(_request: FastifyRequest, reply: FastifyReply) {

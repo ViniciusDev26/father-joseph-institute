@@ -49,6 +49,7 @@ apps/docs/adr/
 | [011](api/011-route-schema-constant.md) | Schema extraído em constante |
 | [012](api/012-route-registration-order.md) | Ordem de registro por método HTTP |
 | [013](api/013-production-seed-strategy.md) | Estratégia de seed de produção |
+| [014](api/014-basic-authentication.md) | Estratégia de Autenticação Basic |
 
 ### Site
 
