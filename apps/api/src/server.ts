@@ -7,6 +7,8 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import { db } from './database/connection';
 import { env } from './env';
 import { artisanRoutes } from './routes/artisans';
 import { authProvider, authRoutes } from './routes/auth';
@@ -23,6 +25,15 @@ declare module 'fastify' {
 }
 
 const app = Fastify({ logger: true });
+
+app.log.info('Running database migrations...');
+try {
+  await migrate(db, { migrationsFolder: './src/database/migrations' });
+  app.log.info('Database migrations completed successfully.');
+} catch (err) {
+  app.log.error({ err }, 'Database migration failed.');
+  process.exit(1);
+}
 
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
