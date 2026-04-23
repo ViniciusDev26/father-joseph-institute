@@ -50,6 +50,7 @@ apps/docs/adr/
 | [012](api/012-route-registration-order.md) | Ordem de registro por método HTTP |
 | [013](api/013-production-seed-strategy.md) | Estratégia de seed de produção |
 | [014](api/014-basic-authentication.md) | Estratégia de Autenticação Basic |
+| [015](api/015-npm-save-exact.md) | Uso de Versões Exatas (save-exact) |
 
 ### Site
 
