@@ -108,6 +108,12 @@ export interface Institution {
   instagram: string | null;
   whatsapp: string | null;
   pixKey: string | null;
+  addressStreet: string | null;
+  addressComplement: string | null;
+  addressNeighborhood: string | null;
+  addressCity: string | null;
+  addressState: string | null;
+  addressZip: string | null;
 }
 
 export interface CartItem {

@@ -143,35 +143,61 @@ export default async function ContactPage() {
                 </FadeIn>
               )}
 
-              <FadeIn delay={200}>
-                <div className="flex flex-col gap-4 rounded-2xl border border-bark/[0.06] bg-cream-dark/50 p-8">
-                  <div className="flex size-12 items-center justify-center rounded-full bg-terracotta/10">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      className="text-terracotta"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <circle cx="12" cy="10" r="3" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+              {institution.addressStreet && (
+                <FadeIn delay={200}>
+                  <div className="flex flex-col gap-4 rounded-2xl border border-bark/[0.06] bg-cream-dark/50 p-8">
+                    <div className="flex size-12 items-center justify-center rounded-full bg-terracotta/10">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        className="text-terracotta"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <circle
+                          cx="12"
+                          cy="10"
+                          r="3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="font-display text-lg font-semibold text-bark">
+                        {c.address.title}
+                      </h2>
+                      <p className="mt-1 text-sm text-bark-light">{institution.addressStreet}</p>
+                      {institution.addressComplement && (
+                        <p className="text-sm text-bark-light">{institution.addressComplement}</p>
+                      )}
+                      {institution.addressNeighborhood && (
+                        <p className="text-sm text-bark-light">{institution.addressNeighborhood}</p>
+                      )}
+                      {(institution.addressCity || institution.addressState) && (
+                        <p className="text-sm text-bark-light">
+                          {[institution.addressCity, institution.addressState]
+                            .filter(Boolean)
+                            .join(' — ')}
+                        </p>
+                      )}
+                      {institution.addressZip && (
+                        <p className="text-sm text-bark-light">
+                          CEP {institution.addressZip.replace(/^(\d{5})(\d{3})$/, '$1-$2')}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="font-display text-lg font-semibold text-bark">
-                      {c.address.title}
-                    </h2>
-                    <p className="mt-1 text-sm text-bark-light">{c.address.value}</p>
-                  </div>
-                </div>
-              </FadeIn>
+                </FadeIn>
+              )}
             </div>
           )}
         </div>
