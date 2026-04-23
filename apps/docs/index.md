@@ -15,9 +15,9 @@ O sistema é um monorepo que compreende:
 
 Aqui você encontra os pilares da nossa documentação:
 
-- **[Visão Geral do Produto](./IDEA.md)**: O "porquê" do projeto, público-alvo e escopo de cada aplicação.
-- **[Decisões Arquiteturais (ADRs)](./adr/README.md)**: O "como" construímos, registrando escolhas tecnológicas e padrões técnicos.
-- **[Especificações (Specs)](./specs/README.md)**: O "o que" cada parte do sistema faz, incluindo contratos de API e modelos de dados.
+- **[Visão Geral do Produto](./IDEA)**: O "porquê" do projeto, público-alvo e escopo de cada aplicação.
+- **[Decisões Arquiteturais (ADRs)](./adr)**: O "como" construímos, registrando escolhas tecnológicas e padrões técnicos.
+- **[Especificações (Specs)](./specs)**: O "o que" cada parte do sistema faz, incluindo contratos de API e modelos de dados.
 
 ---
 

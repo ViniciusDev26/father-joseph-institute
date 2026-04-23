@@ -40,7 +40,6 @@ function toTitleCase(value: string) {
 function getLabel(name: string, parent?: string) {
   if (LABEL_OVERRIDES[name]) return LABEL_OVERRIDES[name];
 
-  // Specific overrides based on parent to avoid ambiguity
   if (parent === 'specs' && name === 'api') return 'API Contract';
   if (parent === 'specs' && name === 'backend') return 'Backend Specs';
   if (parent === 'specs' && name === 'frontend') return 'Frontend Specs';
@@ -55,8 +54,13 @@ function toDocLink(filePath: string) {
     return '/';
   }
 
+  // Com cleanUrls: true, removemos .md e o sufixo /README
   if (relativePath.endsWith('/README.md')) {
-    return `/${relativePath.slice(0, -'/README.md'.length)}/`;
+    return `/${relativePath.slice(0, -'/README.md'.length)}`;
+  }
+  
+  if (relativePath === 'README.md') {
+    return '/';
   }
 
   return `/${relativePath.replace(/\.md$/, '')}`;
@@ -104,12 +108,12 @@ const sidebar: SidebarItem[] = [
   { text: 'Visão Geral', link: '/IDEA' },
   {
     text: 'ADRs',
-    link: '/adr/',
+    link: '/adr',
     items: buildSidebarItems(join(docsRoot, 'adr'))
   },
   {
     text: 'Specs',
-    link: '/specs/',
+    link: '/specs',
     items: buildSidebarItems(join(docsRoot, 'specs'))
   },
 ];
@@ -122,10 +126,18 @@ export default defineConfig({
     nav: [
       { text: 'Início', link: '/' },
       { text: 'Visão Geral', link: '/IDEA' },
-      { text: 'ADRs', link: '/adr/' },
-      { text: 'Specs', link: '/specs/' },
+      { text: 'ADRs', link: '/adr' },
+      { text: 'Specs', link: '/specs' },
     ],
     sidebar,
+    outline: {
+        label: 'Nesta página',
+        level: [2, 3]
+    },
+    docFooter: {
+        prev: 'Anterior',
+        next: 'Próxima'
+    },
     search: {
       provider: 'local',
     },
