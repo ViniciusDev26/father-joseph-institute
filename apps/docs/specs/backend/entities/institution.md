@@ -11,7 +11,13 @@
 | slug      | varchar | no       | —       | URL-friendly version of the name, unique         |
 | instagram | varchar | yes      | null    | Instagram handle (without @)                     |
 | whatsapp  | varchar | yes      | null    | WhatsApp number, digits only in DB               |
-| pix_key   | varchar | yes      | null    | PIX key (any format: CPF, email, phone, random)  |
+| pix_key              | varchar    | yes      | null    | PIX key (any format: CPF, email, phone, random)  |
+| address_street       | varchar    | yes      | null    | Street name and number (e.g. "Rua X, 123")       |
+| address_complement   | varchar    | yes      | null    | Complement (e.g. "Sala 2", "Apto 4B")            |
+| address_neighborhood | varchar    | yes      | null    | Neighborhood (bairro)                            |
+| address_city         | varchar    | yes      | null    | City                                             |
+| address_state        | varchar(2) | yes      | null    | State abbreviation (UF, e.g. "SP")               |
+| address_zip          | varchar    | yes      | null    | CEP, digits only (8 chars)                       |
 
 ## Relations
 
