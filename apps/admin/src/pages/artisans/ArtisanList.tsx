@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '@/lib/axios';
-import { listArtisansResponseSchema, type Artisan } from '@/schemas/artisan';
 import { FadeIn } from '@/components/FadeIn';
+import { api } from '@/lib/axios';
+import { type Artisan, listArtisansResponseSchema } from '@/schemas/artisan';
 
 export function ArtisanList() {
   const [artisans, setArtisans] = useState<Artisan[]>([]);
@@ -12,7 +12,7 @@ export function ArtisanList() {
   useEffect(() => {
     api
       .get('/artisans')
-      .then((res) => {
+      .then(res => {
         const validated = listArtisansResponseSchema.parse(res.data);
         setArtisans(validated.artisans);
       })
@@ -83,7 +83,7 @@ export function ArtisanList() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {artisans.map((a) => (
+                  {artisans.map(a => (
                     <tr key={a.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3">
                         <img

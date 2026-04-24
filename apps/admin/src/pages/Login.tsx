@@ -1,11 +1,8 @@
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../store/useAuthStore';
-import { api } from '../lib/axios';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Form,
   FormControl,
@@ -14,6 +11,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { api } from '../lib/axios';
+import { useAuthStore } from '../store/useAuthStore';
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Usuário é obrigatório'),
@@ -23,7 +23,7 @@ const loginSchema = z.object({
 type LoginData = z.infer<typeof loginSchema>;
 
 export function Login() {
-  const setToken = useAuthStore((state) => state.setToken);
+  const setToken = useAuthStore(state => state.setToken);
   const navigate = useNavigate();
 
   const form = useForm<LoginData>({ resolver: zodResolver(loginSchema) });
@@ -31,9 +31,13 @@ export function Login() {
   const onSubmit = async (data: LoginData) => {
     try {
       const token = btoa(`${data.username}:${data.password}`);
-      await api.post('/auth/validate', {}, {
-        headers: { Authorization: `Basic ${token}` },
-      });
+      await api.post(
+        '/auth/validate',
+        {},
+        {
+          headers: { Authorization: `Basic ${token}` },
+        },
+      );
       setToken(token);
       navigate('/');
     } catch {
@@ -80,9 +84,7 @@ export function Login() {
 
           <div>
             <h1 className="text-2xl font-semibold text-gray-900">Bom te ver!</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Entre com suas credenciais para continuar
-            </p>
+            <p className="mt-1 text-sm text-gray-500">Entre com suas credenciais para continuar</p>
           </div>
 
           <Form {...form}>
@@ -94,11 +96,7 @@ export function Login() {
                   <FormItem>
                     <FormLabel>Usuário</FormLabel>
                     <FormControl>
-                      <Input
-                        autoComplete="username"
-                        placeholder="admin"
-                        {...field}
-                      />
+                      <Input autoComplete="username" placeholder="admin" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -126,17 +124,11 @@ export function Login() {
 
               {form.formState.errors.root && (
                 <div className="rounded-md bg-red-50 border border-red-100 px-4 py-3">
-                  <p className="text-sm text-red-700">
-                    {form.formState.errors.root.message}
-                  </p>
+                  <p className="text-sm text-red-700">{form.formState.errors.root.message}</p>
                 </div>
               )}
 
-              <Button
-                type="submit"
-                disabled={form.formState.isSubmitting}
-                className="w-full"
-              >
+              <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
                 {form.formState.isSubmitting ? 'Entrando...' : 'Entrar'}
               </Button>
             </form>

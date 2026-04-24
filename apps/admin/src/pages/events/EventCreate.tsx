@@ -1,14 +1,10 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import { api } from '@/lib/axios';
-import { createEventSchema, type CreateEventForm } from '@/schemas/event';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Link, useNavigate } from 'react-router-dom';
 import { FadeIn } from '@/components/FadeIn';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -17,6 +13,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { api } from '@/lib/axios';
+import { type CreateEventForm, createEventSchema } from '@/schemas/event';
 
 const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg'];
 
@@ -32,7 +32,7 @@ export function EventCreate() {
 
   const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    const invalid = files.filter((f) => !ALLOWED_MIME_TYPES.includes(f.type));
+    const invalid = files.filter(f => !ALLOWED_MIME_TYPES.includes(f.type));
     if (invalid.length > 0) {
       setPhotosError('Apenas PNG ou JPEG são aceitos');
       setPhotoFiles([]);
@@ -53,7 +53,7 @@ export function EventCreate() {
       const body: Record<string, unknown> = {
         name: data.name,
         date: new Date(data.date).toISOString(),
-        photos: photoFiles.map((f) => ({ name: f.name, mimeType: f.type })),
+        photos: photoFiles.map(f => ({ name: f.name, mimeType: f.type })),
       };
       if (data.description) body.description = data.description;
 
@@ -98,7 +98,9 @@ export function EventCreate() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome <span className="text-destructive">*</span></FormLabel>
+                    <FormLabel>
+                      Nome <span className="text-destructive">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="Nome do evento" {...field} />
                     </FormControl>
@@ -126,7 +128,9 @@ export function EventCreate() {
                 name="date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Data e hora <span className="text-destructive">*</span></FormLabel>
+                    <FormLabel>
+                      Data e hora <span className="text-destructive">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input type="datetime-local" {...field} />
                     </FormControl>
@@ -147,14 +151,20 @@ export function EventCreate() {
                   onChange={handleFilesChange}
                   className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-secondary-foreground hover:file:bg-secondary/80"
                 />
-                {photosError && <p className="text-sm font-medium text-destructive">{photosError}</p>}
+                {photosError && (
+                  <p className="text-sm font-medium text-destructive">{photosError}</p>
+                )}
                 {photoFiles.length > 0 && (
-                  <p className="text-xs text-muted-foreground">{photoFiles.length} foto(s) selecionada(s)</p>
+                  <p className="text-xs text-muted-foreground">
+                    {photoFiles.length} foto(s) selecionada(s)
+                  </p>
                 )}
               </div>
 
               {apiError && (
-                <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{apiError}</p>
+                <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                  {apiError}
+                </p>
               )}
 
               <div className="flex flex-col sm:flex-row gap-3 pt-2">

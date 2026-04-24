@@ -1,15 +1,10 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import { api } from '@/lib/axios';
-import { createProductSchema, type CreateProductForm } from '@/schemas/product';
-import { listArtisansResponseSchema, type Artisan } from '@/schemas/artisan';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Link, useNavigate } from 'react-router-dom';
 import { FadeIn } from '@/components/FadeIn';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -18,6 +13,11 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { api } from '@/lib/axios';
+import { type Artisan, listArtisansResponseSchema } from '@/schemas/artisan';
+import { type CreateProductForm, createProductSchema } from '@/schemas/product';
 
 const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg'];
 
@@ -40,7 +40,7 @@ export function ProductCreate() {
   useEffect(() => {
     api
       .get('/artisans')
-      .then((res) => {
+      .then(res => {
         const validated = listArtisansResponseSchema.parse(res.data);
         setArtisans(validated.artisans);
       })
@@ -48,14 +48,12 @@ export function ProductCreate() {
   }, []);
 
   const toggleArtisan = (id: number) => {
-    setSelectedArtisanIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
+    setSelectedArtisanIds(prev => (prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]));
   };
 
   const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    const invalid = files.filter((f) => !ALLOWED_MIME_TYPES.includes(f.type));
+    const invalid = files.filter(f => !ALLOWED_MIME_TYPES.includes(f.type));
     if (invalid.length > 0) {
       setPhotosError('Apenas PNG ou JPEG são aceitos');
       setPhotoFiles([]);
@@ -84,7 +82,7 @@ export function ProductCreate() {
         name: data.name,
         price: data.price,
         artisanIds: selectedArtisanIds,
-        photos: photoFiles.map((f) => ({ mimeType: f.type })),
+        photos: photoFiles.map(f => ({ mimeType: f.type })),
       };
       if (data.description) body.description = data.description;
 
@@ -129,7 +127,9 @@ export function ProductCreate() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome <span className="text-destructive">*</span></FormLabel>
+                    <FormLabel>
+                      Nome <span className="text-destructive">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="Nome do produto" {...field} />
                     </FormControl>
@@ -157,7 +157,9 @@ export function ProductCreate() {
                 name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Preço (R$) <span className="text-destructive">*</span></FormLabel>
+                    <FormLabel>
+                      Preço (R$) <span className="text-destructive">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -165,7 +167,7 @@ export function ProductCreate() {
                         min="0.01"
                         placeholder="0,00"
                         value={field.value ?? ''}
-                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        onChange={e => field.onChange(e.target.valueAsNumber)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -185,7 +187,7 @@ export function ProductCreate() {
                       artisanError ? 'border-destructive' : 'border-input'
                     }`}
                   >
-                    {artisans.map((a) => (
+                    {artisans.map(a => (
                       <label key={a.id} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
@@ -218,14 +220,20 @@ export function ProductCreate() {
                   onChange={handleFilesChange}
                   className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-secondary-foreground hover:file:bg-secondary/80"
                 />
-                {photosError && <p className="text-sm font-medium text-destructive">{photosError}</p>}
+                {photosError && (
+                  <p className="text-sm font-medium text-destructive">{photosError}</p>
+                )}
                 {photoFiles.length > 0 && (
-                  <p className="text-xs text-muted-foreground">{photoFiles.length} foto(s) selecionada(s)</p>
+                  <p className="text-xs text-muted-foreground">
+                    {photoFiles.length} foto(s) selecionada(s)
+                  </p>
                 )}
               </div>
 
               {apiError && (
-                <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{apiError}</p>
+                <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                  {apiError}
+                </p>
               )}
 
               <div className="flex flex-col sm:flex-row gap-3 pt-2">

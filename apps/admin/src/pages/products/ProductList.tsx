@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FadeIn } from '@/components/FadeIn';
 import { api } from '@/lib/axios';
 import { listProductsResponseSchema, type Product } from '@/schemas/product';
-import { FadeIn } from '@/components/FadeIn';
 
 export function ProductList() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -12,7 +12,7 @@ export function ProductList() {
   useEffect(() => {
     api
       .get('/products')
-      .then((res) => {
+      .then(res => {
         const validated = listProductsResponseSchema.parse(res.data);
         setProducts(validated.products);
       })
@@ -65,7 +65,7 @@ export function ProductList() {
                     <p className="text-sm font-mono text-primary mt-0.5">R$ {p.price.toFixed(2)}</p>
                     {p.artisans.length > 0 && (
                       <p className="text-xs text-gray-400 mt-1">
-                        {p.artisans.map((a) => a.name).join(', ')}
+                        {p.artisans.map(a => a.name).join(', ')}
                       </p>
                     )}
                   </div>
@@ -88,7 +88,7 @@ export function ProductList() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {products.map((p) => (
+                  {products.map(p => (
                     <tr key={p.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3">
                         {p.photos[0] ? (
@@ -104,7 +104,7 @@ export function ProductList() {
                       <td className="px-4 py-3 font-medium text-gray-900">{p.name}</td>
                       <td className="px-4 py-3 text-gray-600 font-mono">R$ {p.price.toFixed(2)}</td>
                       <td className="px-4 py-3 text-gray-600">
-                        {p.artisans.map((a) => a.name).join(', ') || '—'}
+                        {p.artisans.map(a => a.name).join(', ') || '—'}
                       </td>
                       <td className="px-4 py-3 text-gray-600">{p.photos.length}</td>
                     </tr>

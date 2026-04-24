@@ -9,13 +9,13 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    set => ({
       token: null,
-      setToken: (token) => set({ token }),
+      setToken: token => set({ token }),
       clearToken: () => set({ token: null }),
     }),
     {
       name: 'admin-auth-storage',
-    }
-  )
+    },
+  ),
 );

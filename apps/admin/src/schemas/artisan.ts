@@ -16,11 +16,15 @@ export const listArtisansResponseSchema = z.object({
 export const createArtisanSchema = z
   .object({
     name: z.string().min(1, 'Nome é obrigatório').max(255),
-    phone: z.string().regex(/^\d{11}$/, 'Telefone deve ter 11 dígitos').or(z.literal('')).optional(),
+    phone: z
+      .string()
+      .regex(/^\d{11}$/, 'Telefone deve ter 11 dígitos')
+      .or(z.literal(''))
+      .optional(),
     email: z.string().email('E-mail inválido').or(z.literal('')).optional(),
     description: z.string().optional(),
   })
-  .refine((data) => (data.phone && data.phone.length > 0) || (data.email && data.email.length > 0), {
+  .refine(data => (data.phone && data.phone.length > 0) || (data.email && data.email.length > 0), {
     message: 'Informe ao menos telefone ou e-mail',
     path: ['phone'],
   });

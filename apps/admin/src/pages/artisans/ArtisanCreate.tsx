@@ -1,14 +1,10 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import { api } from '@/lib/axios';
-import { createArtisanSchema, type CreateArtisanForm } from '@/schemas/artisan';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Link, useNavigate } from 'react-router-dom';
 import { FadeIn } from '@/components/FadeIn';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -17,6 +13,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { api } from '@/lib/axios';
+import { type CreateArtisanForm, createArtisanSchema } from '@/schemas/artisan';
 
 const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg'];
 
@@ -94,7 +94,9 @@ export function ArtisanCreate() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome <span className="text-destructive">*</span></FormLabel>
+                    <FormLabel>
+                      Nome <span className="text-destructive">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="Nome completo" {...field} />
                     </FormControl>
@@ -161,7 +163,9 @@ export function ArtisanCreate() {
               </div>
 
               {apiError && (
-                <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{apiError}</p>
+                <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                  {apiError}
+                </p>
               )}
 
               <div className="flex flex-col sm:flex-row gap-3 pt-2">

@@ -11,7 +11,7 @@ const navItems = [
 ];
 
 function NavItems({ onNavigate }: { onNavigate?: () => void }) {
-  const clearToken = useAuthStore((state) => state.clearToken);
+  const clearToken = useAuthStore(state => state.clearToken);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -23,7 +23,7 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <>
       <nav className="flex-1 px-3 py-4 space-y-0.5">
-        {navItems.map((item) => (
+        {navItems.map(item => (
           <NavLink
             key={item.to}
             to={item.to}
@@ -61,7 +61,9 @@ export function Layout() {
       {/* Mobile header */}
       <header className="md:hidden fixed top-0 inset-x-0 z-30 h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 leading-none">Admin</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 leading-none">
+            Admin
+          </p>
           <p className="text-sm font-semibold text-gray-800 leading-tight">Instituto Padre José</p>
         </div>
         <button
@@ -69,7 +71,13 @@ export function Layout() {
           className="p-2 rounded-md text-gray-500 hover:bg-gray-100 transition-colors"
           aria-label="Abrir menu"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
@@ -78,14 +86,13 @@ export function Layout() {
       {/* Mobile nav overlay */}
       {menuOpen && (
         <div className="md:hidden fixed inset-0 z-40 flex">
-          <div
-            className="fixed inset-0 bg-black/40"
-            onClick={() => setMenuOpen(false)}
-          />
+          <div className="fixed inset-0 bg-black/40" onClick={() => setMenuOpen(false)} />
           <div className="relative z-50 w-64 bg-white flex flex-col h-full shadow-xl">
             <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Admin</p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                  Admin
+                </p>
                 <p className="mt-0.5 text-sm font-semibold text-gray-800">Instituto Padre José</p>
               </div>
               <button
@@ -93,7 +100,13 @@ export function Layout() {
                 className="p-1.5 rounded-md text-gray-400 hover:bg-gray-100 transition-colors"
                 aria-label="Fechar menu"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>

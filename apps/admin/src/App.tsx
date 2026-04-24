@@ -1,18 +1,18 @@
-import { createBrowserRouter, RouterProvider, Navigate, Outlet } from 'react-router-dom';
-import { Login } from './pages/Login';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
 import { Layout } from './components/Layout';
-import { ArtisanList } from './pages/artisans/ArtisanList';
 import { ArtisanCreate } from './pages/artisans/ArtisanCreate';
-import { EventList } from './pages/events/EventList';
+import { ArtisanList } from './pages/artisans/ArtisanList';
 import { EventCreate } from './pages/events/EventCreate';
-import { ProductList } from './pages/products/ProductList';
-import { ProductCreate } from './pages/products/ProductCreate';
-import { VolunteerList } from './pages/volunteers/VolunteerList';
+import { EventList } from './pages/events/EventList';
 import { InstitutionEdit } from './pages/institution/InstitutionEdit';
+import { Login } from './pages/Login';
+import { ProductCreate } from './pages/products/ProductCreate';
+import { ProductList } from './pages/products/ProductList';
+import { VolunteerList } from './pages/volunteers/VolunteerList';
 import { useAuthStore } from './store/useAuthStore';
 
 function ProtectedRoute() {
-  const token = useAuthStore((state) => state.token);
+  const token = useAuthStore(state => state.token);
   return token ? <Outlet /> : <Navigate to="/login" replace />;
 }
 

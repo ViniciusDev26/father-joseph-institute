@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '@/lib/axios';
-import { listEventsResponseSchema, type Event } from '@/schemas/event';
 import { FadeIn } from '@/components/FadeIn';
+import { api } from '@/lib/axios';
+import { type Event, listEventsResponseSchema } from '@/schemas/event';
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('pt-BR', {
@@ -22,7 +22,7 @@ export function EventList() {
   useEffect(() => {
     api
       .get('/events')
-      .then((res) => {
+      .then(res => {
         const validated = listEventsResponseSchema.parse(res.data);
         setEvents(validated.events);
       })
@@ -63,7 +63,9 @@ export function EventList() {
                 <div className="bg-white rounded-lg border border-gray-200 p-4">
                   <div className="flex items-start justify-between gap-2">
                     <p className="font-medium text-gray-900 text-sm">{e.name}</p>
-                    <span className="text-xs text-gray-400 whitespace-nowrap">{e.photos.length} foto(s)</span>
+                    <span className="text-xs text-gray-400 whitespace-nowrap">
+                      {e.photos.length} foto(s)
+                    </span>
                   </div>
                   <p className="text-xs text-primary mt-1">{formatDate(e.date)}</p>
                   {e.description && (
@@ -87,7 +89,7 @@ export function EventList() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {events.map((e) => (
+                  {events.map(e => (
                     <tr key={e.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 font-medium text-gray-900">{e.name}</td>
                       <td className="px-4 py-3 text-gray-600">{formatDate(e.date)}</td>

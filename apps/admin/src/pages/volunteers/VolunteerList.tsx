@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
+import { FadeIn } from '@/components/FadeIn';
 import { api } from '@/lib/axios';
 import { listVolunteersResponseSchema, type Volunteer } from '@/schemas/volunteer';
-import { FadeIn } from '@/components/FadeIn';
 
 const DAY_LABELS: Record<string, string> = {
   monday: 'Seg',
@@ -21,7 +21,7 @@ export function VolunteerList() {
   useEffect(() => {
     api
       .get('/volunteers')
-      .then((res) => {
+      .then(res => {
         const validated = listVolunteersResponseSchema.parse(res.data);
         setVolunteers(validated.volunteers);
       })
@@ -56,7 +56,7 @@ export function VolunteerList() {
                   <p className="text-xs text-gray-500 mt-0.5">{v.profession}</p>
                   <div className="flex items-center gap-3 mt-2">
                     <p className="text-xs text-gray-400">
-                      {v.availability.days.map((d) => DAY_LABELS[d] ?? d).join(', ')}
+                      {v.availability.days.map(d => DAY_LABELS[d] ?? d).join(', ')}
                     </p>
                     <span className="text-xs text-gray-300">·</span>
                     <p className="text-xs text-gray-400">
@@ -81,12 +81,12 @@ export function VolunteerList() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {volunteers.map((v) => (
+                  {volunteers.map(v => (
                     <tr key={v.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 font-medium text-gray-900">{v.name}</td>
                       <td className="px-4 py-3 text-gray-600">{v.profession}</td>
                       <td className="px-4 py-3 text-gray-600">
-                        {v.availability.days.map((d) => DAY_LABELS[d] ?? d).join(', ')}
+                        {v.availability.days.map(d => DAY_LABELS[d] ?? d).join(', ')}
                       </td>
                       <td className="px-4 py-3 text-gray-600">
                         {v.availability.startTime} – {v.availability.endTime}
