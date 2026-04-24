@@ -1,16 +1,13 @@
-import axios from 'axios';
 import { env } from '@/lib/env';
 import type { ApiEvent, Artisan, Institution, Product } from '@/types/content';
 
-const api = axios.create({
-  baseURL: env.API_URL,
-});
+const BASE_URL = env.API_URL;
 
 export async function fetchArtisans(): Promise<Artisan[]> {
   try {
-    const { data } = await api.get<{ artisans: Artisan[] }>('/artisans', {
-      headers: { 'Cache-Control': 'no-store' },
-    });
+    const res = await fetch(`${BASE_URL}/artisans`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const data = await res.json();
     return data.artisans;
   } catch {
     return [];
@@ -19,9 +16,9 @@ export async function fetchArtisans(): Promise<Artisan[]> {
 
 export async function fetchEvents(): Promise<ApiEvent[]> {
   try {
-    const { data } = await api.get<{ events: ApiEvent[] }>('/events', {
-      headers: { 'Cache-Control': 'no-store' },
-    });
+    const res = await fetch(`${BASE_URL}/events`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const data = await res.json();
     return data.events;
   } catch {
     return [];
@@ -30,9 +27,9 @@ export async function fetchEvents(): Promise<ApiEvent[]> {
 
 export async function fetchProducts(): Promise<Product[]> {
   try {
-    const { data } = await api.get<{ products: Product[] }>('/products', {
-      headers: { 'Cache-Control': 'no-store' },
-    });
+    const res = await fetch(`${BASE_URL}/products`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const data = await res.json();
     return data.products;
   } catch {
     return [];
@@ -41,10 +38,9 @@ export async function fetchProducts(): Promise<Product[]> {
 
 export async function fetchInstitution(): Promise<Institution | null> {
   try {
-    const { data } = await api.get<Institution>('/institution', {
-      headers: { 'Cache-Control': 'no-store' },
-    });
-    return data;
+    const res = await fetch(`${BASE_URL}/institution`, { next: { revalidate: 3600 } });
+    if (!res.ok) return null;
+    return res.json();
   } catch {
     return null;
   }

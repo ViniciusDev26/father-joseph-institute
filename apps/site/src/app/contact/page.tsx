@@ -7,8 +7,6 @@ export const metadata: Metadata = {
   title: 'Contato',
 };
 
-export const revalidate = 3600;
-
 export default async function ContactPage() {
   const { contact: c } = content;
   const institution = await fetchInstitution();

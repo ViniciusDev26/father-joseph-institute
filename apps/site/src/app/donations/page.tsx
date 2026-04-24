@@ -8,8 +8,6 @@ export const metadata: Metadata = {
   title: 'Caixinha Solidária',
 };
 
-export const revalidate = 3600;
-
 export default async function DonationsPage() {
   const { donations: c } = content;
   const institution = await fetchInstitution();
