@@ -12,7 +12,7 @@ async function seed() {
   process.exit(0);
 }
 
-seed().catch((err) => {
+seed().catch(err => {
   console.error(err);
   process.exit(1);
 });

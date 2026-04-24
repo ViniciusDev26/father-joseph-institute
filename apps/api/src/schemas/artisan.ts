@@ -7,11 +7,14 @@ export const createArtisanBodySchema = z
     photo: z.object({
       mimeType: mimeTypeSchema,
     }),
-    phone: z.string().regex(/^\d{11}$/, 'phone must contain exactly 11 digits').optional(),
+    phone: z
+      .string()
+      .regex(/^\d{11}$/, 'phone must contain exactly 11 digits')
+      .optional(),
     email: z.email().optional(),
     description: z.string().optional(),
   })
-  .refine((data) => data.phone !== undefined || data.email !== undefined, {
+  .refine(data => data.phone !== undefined || data.email !== undefined, {
     message: 'At least one of phone or email must be provided',
   });
 

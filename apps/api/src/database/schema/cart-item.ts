@@ -17,5 +17,5 @@ export const cartItems = pgTable(
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
     deletedAt: timestamp('deleted_at', { withTimezone: true }),
   },
-  (t) => [unique().on(t.cartId, t.productId)],
+  t => [unique().on(t.cartId, t.productId)],
 );

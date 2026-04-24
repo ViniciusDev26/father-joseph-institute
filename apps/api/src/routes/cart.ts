@@ -56,10 +56,7 @@ export async function cartRoutes(app: FastifyInstance) {
     .post('/cart/checkout', { schema: checkoutSchema }, checkout);
 }
 
-async function getCart(
-  request: FastifyRequest<{ Params: GetCartParams }>,
-  reply: FastifyReply,
-) {
+async function getCart(request: FastifyRequest<{ Params: GetCartParams }>, reply: FastifyReply) {
   const { sessionId } = request.params;
 
   const [cart] = await db
@@ -96,7 +93,11 @@ async function getCart(
 
   const seenItems = new Map<
     number,
-    { id: number; quantity: number; product: { id: number; name: string; price: number; photoUrl: string | null } }
+    {
+      id: number;
+      quantity: number;
+      product: { id: number; name: string; price: number; photoUrl: string | null };
+    }
   >();
 
   for (const row of rows) {
@@ -117,10 +118,7 @@ async function getCart(
   return reply.status(200).send({ cartId: cart.id, sessionId, items: [...seenItems.values()] });
 }
 
-async function addToCart(
-  request: FastifyRequest<{ Body: AddToCartBody }>,
-  reply: FastifyReply,
-) {
+async function addToCart(request: FastifyRequest<{ Body: AddToCartBody }>, reply: FastifyReply) {
   const { sessionId, productId, quantity } = request.body;
 
   const [product] = await db
@@ -167,10 +165,7 @@ async function addToCart(
   return reply.status(200).send({ cartId: cart.id, sessionId, items });
 }
 
-async function checkout(
-  request: FastifyRequest<{ Body: CheckoutBody }>,
-  reply: FastifyReply,
-) {
+async function checkout(request: FastifyRequest<{ Body: CheckoutBody }>, reply: FastifyReply) {
   const { sessionId } = request.body;
 
   const [cart] = await db
@@ -230,7 +225,7 @@ async function checkout(
   const total = items.reduce((sum, item) => sum + item.quantity * parseFloat(item.productPrice), 0);
 
   const itemLines = items
-    .map((item) => {
+    .map(item => {
       const price = parseFloat(item.productPrice).toFixed(2).replace('.', ',');
       return `- ${item.quantity}x ${item.productName} — R$ ${price} cada`;
     })

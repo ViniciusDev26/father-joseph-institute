@@ -2,10 +2,7 @@ import type { FastifyInstance, preHandlerHookHandler } from 'fastify';
 import fp from 'fastify-plugin';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { env } from '../env';
-import {
-  unauthorizedResponseSchema,
-  validateAuthResponseSchema,
-} from '../schemas/auth';
+import { unauthorizedResponseSchema, validateAuthResponseSchema } from '../schemas/auth';
 
 export const authProvider = fp(async (app: FastifyInstance) => {
   const authenticate: preHandlerHookHandler = async (request, reply) => {
@@ -41,16 +38,14 @@ export async function authRoutes(app: FastifyInstance) {
     },
   };
 
-  app
-    .withTypeProvider<ZodTypeProvider>()
-    .post(
-      '/auth/validate',
-      {
-        schema: validateAuthSchema,
-        preHandler: [app.authenticate],
-      },
-      async (_request, reply) => {
-        return reply.status(200).send({ valid: true });
-      },
-    );
+  app.withTypeProvider<ZodTypeProvider>().post(
+    '/auth/validate',
+    {
+      schema: validateAuthSchema,
+      preHandler: [app.authenticate],
+    },
+    async (_request, reply) => {
+      return reply.status(200).send({ valid: true });
+    },
+  );
 }

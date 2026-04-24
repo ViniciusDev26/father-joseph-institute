@@ -3,12 +3,12 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { db } from '../database/connection';
 import { institutions, volunteers } from '../database/schema';
+import { errorResponseSchema } from '../schemas/shared';
 import {
   listVolunteersResponseSchema,
   registerVolunteerBodySchema,
   registerVolunteerResponseSchema,
 } from '../schemas/volunteer';
-import { errorResponseSchema } from '../schemas/shared';
 import type { RegisterVolunteerBody } from '../types/volunteer';
 
 const dayLabels: Record<string, string> = {
@@ -21,8 +21,15 @@ const dayLabels: Record<string, string> = {
   sunday: 'domingo',
 };
 
-function buildWhatsappUrl(whatsapp: string, name: string, profession: string, days: string[], startTime: string, endTime: string) {
-  const dayNames = days.map((d) => dayLabels[d]).join(', ');
+function buildWhatsappUrl(
+  whatsapp: string,
+  name: string,
+  profession: string,
+  days: string[],
+  startTime: string,
+  endTime: string,
+) {
+  const dayNames = days.map(d => dayLabels[d]).join(', ');
   const message = `Olá! Me chamo ${name}, sou ${profession} e gostaria de me voluntariar no Instituto Padre José. Tenho disponibilidade às ${dayNames} das ${startTime} às ${endTime}.`;
   return `https://wa.me/55${whatsapp}?text=${encodeURIComponent(message)}`;
 }
@@ -49,18 +56,19 @@ export async function volunteerRoutes(app: FastifyInstance) {
 
   app
     .withTypeProvider<ZodTypeProvider>()
-    .get('/volunteers', { schema: listVolunteersSchema, preHandler: [app.authenticate] }, listVolunteers)
+    .get(
+      '/volunteers',
+      { schema: listVolunteersSchema, preHandler: [app.authenticate] },
+      listVolunteers,
+    )
     .post('/volunteers', { schema: registerVolunteerSchema }, registerVolunteer);
 }
 
 async function listVolunteers(_request: FastifyRequest, reply: FastifyReply) {
-  const rows = await db
-    .select()
-    .from(volunteers)
-    .where(isNull(volunteers.deletedAt));
+  const rows = await db.select().from(volunteers).where(isNull(volunteers.deletedAt));
 
   return reply.status(200).send({
-    volunteers: rows.map((v) => ({
+    volunteers: rows.map(v => ({
       id: v.id,
       name: v.name,
       profession: v.profession,
@@ -89,7 +97,6 @@ async function registerVolunteer(
       message: 'Institution has no WhatsApp number registered',
     });
   }
-
 
   const [volunteer] = await db
     .insert(volunteers)

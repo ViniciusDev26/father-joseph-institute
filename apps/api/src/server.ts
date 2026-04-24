@@ -1,13 +1,13 @@
 import cors from '@fastify/cors';
 import swagger from '@fastify/swagger';
 import scalarApiReference from '@scalar/fastify-api-reference';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import Fastify from 'fastify';
 import {
   jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
-import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { db } from './database/connection';
 import { env } from './env';
 import { artisanRoutes } from './routes/artisans';

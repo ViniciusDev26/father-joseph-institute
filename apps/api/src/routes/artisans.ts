@@ -45,13 +45,10 @@ export async function artisanRoutes(app: FastifyInstance) {
 }
 
 async function listArtisans(_request: FastifyRequest, reply: FastifyReply) {
-  const rows = await db
-    .select()
-    .from(artisans)
-    .where(isNull(artisans.deletedAt));
+  const rows = await db.select().from(artisans).where(isNull(artisans.deletedAt));
 
   return reply.status(200).send({
-    artisans: rows.map((artisan) => ({
+    artisans: rows.map(artisan => ({
       id: artisan.id,
       name: artisan.name,
       photoUrl: getPublicUrl(artisan.photoObjectKey),
@@ -84,10 +81,7 @@ async function createArtisan(
 
   const objectKey = `artisans/${artisan.id}.${ext}`;
 
-  const [updated] = await db
-    .update(artisans)
-    .set({ photoObjectKey: objectKey })
-    .returning();
+  const [updated] = await db.update(artisans).set({ photoObjectKey: objectKey }).returning();
 
   const presignedUrl = await generatePresignedPutUrl(objectKey, photo.mimeType);
 

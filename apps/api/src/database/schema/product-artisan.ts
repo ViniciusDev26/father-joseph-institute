@@ -13,5 +13,5 @@ export const productArtisans = pgTable(
       .references(() => artisans.id, { onDelete: 'cascade' }),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   },
-  (t) => [primaryKey({ columns: [t.productId, t.artisanId] })],
+  t => [primaryKey({ columns: [t.productId, t.artisanId] })],
 );

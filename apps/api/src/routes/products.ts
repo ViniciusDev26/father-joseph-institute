@@ -57,7 +57,10 @@ async function listProducts(_request: FastifyRequest, reply: FastifyReply) {
       photoObjectKey: productPhotos.objectKey,
     })
     .from(products)
-    .leftJoin(productPhotos, and(eq(productPhotos.productId, products.id), isNull(productPhotos.deletedAt)))
+    .leftJoin(
+      productPhotos,
+      and(eq(productPhotos.productId, products.id), isNull(productPhotos.deletedAt)),
+    )
     .where(isNull(products.deletedAt));
 
   const artisanRows = await db
@@ -68,7 +71,12 @@ async function listProducts(_request: FastifyRequest, reply: FastifyReply) {
     })
     .from(productArtisans)
     .innerJoin(artisans, eq(artisans.id, productArtisans.artisanId))
-    .where(inArray(productArtisans.productId, photoRows.map((r) => r.productId)));
+    .where(
+      inArray(
+        productArtisans.productId,
+        photoRows.map(r => r.productId),
+      ),
+    );
 
   const artisansByProduct = new Map<number, { id: number; name: string }[]>();
   for (const row of artisanRows) {
@@ -139,12 +147,12 @@ async function createProduct(
     .values({ name, description: description ?? null, price: String(price) })
     .returning();
 
-  await db.insert(productArtisans).values(
-    uniqueArtisanIds.map((artisanId) => ({ productId: product.id, artisanId })),
-  );
+  await db
+    .insert(productArtisans)
+    .values(uniqueArtisanIds.map(artisanId => ({ productId: product.id, artisanId })));
 
   const photosResult = await Promise.all(
-    photos.map(async (photo) => {
+    photos.map(async photo => {
       const ext = photo.mimeType === 'image/png' ? 'png' : 'jpg';
       const objectKey = `products/${product.id}/${randomUUID()}.${ext}`;
 
