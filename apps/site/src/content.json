@@ -7,18 +7,18 @@
     "hero": {
       "tag": "Nossa história",
       "title": "Quem Somos",
-      "subtitle": "Fundada em 1955, a Instituição Padre José Venâncio nasceu no coração do Mucuripe para promover autonomia e dignidade através da educação. Hoje, somos um centro de acolhimento e promoção humana que une tradição e impacto social imediato."
+      "subtitle": "Há mais de uma década, o Instituto Padre José trabalha para transformar realidades, acolhendo moradores de rua e dando visibilidade às artesãs da comunidade."
     },
     "mission": {
-      "quote": "Cuidar das pessoas, fortalecer vidas e construir caminhos de esperança através da promoção humana."
+      "quote": "Servir ao próximo com amor, dignidade e esperança — porque toda vida tem valor."
     },
     "story": {
       "tag": "Como tudo começou",
       "title": "Uma missão nascida da compaixão",
       "paragraphs": [
-        "A Instituição Padre José Venâncio iniciou sua caminhada em 1955, no bairro Mucuripe, em Fortaleza. O que começou como um olhar atento às crianças e filhos de trabalhadores da região, evoluiu com o tempo.",
-        "Na década de 90, expandimos nossa atuação para fortalecer o papel de mulheres e adolescentes, transformando o trabalho manual em uma ferramenta de dignidade e inclusão social.",
-        "Hoje, nossa trajetória é o alicerce para uma missão que permanece atual: adaptar-se aos novos tempos sem nunca perder a essência de cuidar das pessoas e construir caminhos de esperança."
+        "O Instituto Padre José nasceu do sonho de um sacerdote que acreditava que a caridade é mais do que entregar alimentos — é restaurar a dignidade de cada pessoa.",
+        "Ao longo dos anos, crescemos e nos tornamos um espaço de acolhimento, capacitação e arte, onde mulheres artesãs encontram um lugar para brilhar e moradores de rua encontram um recomeço.",
+        "Hoje, somos uma comunidade unida pela fé, pelo amor ao próximo e pela crença de que, juntos, podemos mudar vidas."
       ]
     },
     "values": {
@@ -27,19 +27,19 @@
       "items": [
         {
           "title": "Dignidade",
-          "description": "Reconhecer o valor intrínseco de cada pessoa, respeitando sua história e necessidades."
-        },
-        {
-          "title": "Autonomia",
-          "description": "Empoderar mulheres e jovens através do desenvolvimento de habilidades e independência."
-        },
-        {
-          "title": "Educação e Cultura",
-          "description": "Ampliar horizontes por meio de oficinas, artes e reforço escolar."
+          "description": "Toda pessoa merece ser tratada com respeito e cuidado, independentemente de sua situação."
         },
         {
           "title": "Solidariedade",
-          "description": "Agir concretamente no cuidado aos mais vulneráveis e na construção da esperança."
+          "description": "Acreditamos que a transformação acontece quando nos unimos em torno de um bem comum."
+        },
+        {
+          "title": "Arte e Cultura",
+          "description": "Valorizamos o trabalho artesanal como expressão de identidade, talento e autonomia."
+        },
+        {
+          "title": "Esperança",
+          "description": "Cada ação é um passo em direção a um futuro mais justo e amoroso para todos."
         }
       ]
     },
@@ -47,9 +47,9 @@
       "tag": "Nosso impacto",
       "title": "Números que transformam",
       "stats": [
-        { "value": "20+", "label": "Refeições diárias" },
+        { "value": "500+", "label": "Pessoas atendidas por mês" },
         { "value": "30+", "label": "Artesãs apoiadas" },
-        { "value": "70+ ", "label": "Anos de história" },
+        { "value": "10+", "label": "Anos de história" },
         { "value": "100+", "label": "Voluntários ativos" }
       ]
     },
