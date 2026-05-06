@@ -44,5 +44,6 @@ export const checkoutBodySchema = z.object({
 });
 
 export const checkoutResponseSchema = z.object({
+  orderId: z.number(),
   whatsappUrl: z.string(),
 });

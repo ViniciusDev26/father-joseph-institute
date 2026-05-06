@@ -6,7 +6,7 @@ As a visitor, I want to checkout my cart so that I can send my order to the inst
 
 ## Dependencies
 
-- **Entities:** [Cart](../entities/cart.md), [CartItem](../entities/cart-item.md), [Product](../entities/product.md), [Institution](../entities/institution.md)
+- **Entities:** [Cart](../entities/cart.md), [CartItem](../entities/cart-item.md), [Product](../entities/product.md), [Institution](../entities/institution.md), [Order](../entities/order.md), [OrderItem](../entities/order-item.md)
 - **API specs:** [POST /cart/checkout](../../api/cart.md)
 
 ## Acceptance criteria
@@ -14,8 +14,10 @@ As a visitor, I want to checkout my cart so that I can send my order to the inst
 - [ ] Finds the open cart for the given `sessionId`; returns 404 if none exists.
 - [ ] Returns 422 if the cart has no items.
 - [ ] Fetches institution WhatsApp; returns 422 if not set.
+- [ ] Creates an `Order` with status `pending`, the calculated `total`, and a snapshot of every cart item as `OrderItem` rows (product name, unit price, quantity).
 - [ ] Sets cart status to `closed`.
 - [ ] Builds and returns a `whatsappUrl` with a pre-filled message listing products, quantities, unit prices, and total.
+- [ ] Returns the created `orderId` alongside `whatsappUrl`.
 
 ## Edge cases
 

@@ -4,6 +4,8 @@ export * from './cart-item';
 export * from './event';
 export * from './event-photo';
 export * from './institution';
+export * from './order';
+export * from './order-item';
 export * from './product';
 export * from './product-artisan';
 export * from './product-photo';

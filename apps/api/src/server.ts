@@ -15,6 +15,7 @@ import { authProvider, authRoutes } from './routes/auth';
 import { cartRoutes } from './routes/cart';
 import { eventRoutes } from './routes/events';
 import { institutionRoutes } from './routes/institution';
+import { orderRoutes } from './routes/orders';
 import { productRoutes } from './routes/products';
 import { volunteerRoutes } from './routes/volunteers';
 
@@ -68,6 +69,7 @@ await app.register(artisanRoutes);
 await app.register(cartRoutes);
 await app.register(eventRoutes);
 await app.register(institutionRoutes);
+await app.register(orderRoutes);
 await app.register(productRoutes);
 await app.register(volunteerRoutes);
 

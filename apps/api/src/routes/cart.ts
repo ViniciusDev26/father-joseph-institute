@@ -2,7 +2,15 @@ import { and, eq, isNull, sql } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { db } from '../database/connection';
-import { cartItems, carts, institutions, productPhotos, products } from '../database/schema';
+import {
+  cartItems,
+  carts,
+  institutions,
+  orderItems,
+  orders,
+  productPhotos,
+  products,
+} from '../database/schema';
 import { getPublicUrl } from '../lib/storage';
 import {
   addToCartBodySchema,
@@ -185,6 +193,7 @@ async function checkout(request: FastifyRequest<{ Body: CheckoutBody }>, reply: 
 
   const items = await db
     .select({
+      productId: cartItems.productId,
       quantity: cartItems.quantity,
       productName: products.name,
       productPrice: products.price,
@@ -217,12 +226,32 @@ async function checkout(request: FastifyRequest<{ Body: CheckoutBody }>, reply: 
     });
   }
 
+  const total = items.reduce((sum, item) => sum + item.quantity * parseFloat(item.productPrice), 0);
+
+  const [order] = await db
+    .insert(orders)
+    .values({
+      cartId: cart.id,
+      sessionId,
+      status: 'pending',
+      total: total.toFixed(2),
+    })
+    .returning({ id: orders.id });
+
+  await db.insert(orderItems).values(
+    items.map(item => ({
+      orderId: order.id,
+      productId: item.productId,
+      productName: item.productName,
+      unitPrice: item.productPrice,
+      quantity: item.quantity,
+    })),
+  );
+
   await db
     .update(carts)
     .set({ status: 'closed', closedAt: new Date(), updatedAt: new Date() })
     .where(eq(carts.id, cart.id));
-
-  const total = items.reduce((sum, item) => sum + item.quantity * parseFloat(item.productPrice), 0);
 
   const itemLines = items
     .map(item => {
@@ -241,5 +270,5 @@ async function checkout(request: FastifyRequest<{ Body: CheckoutBody }>, reply: 
 
   const whatsappUrl = `https://wa.me/55${institution.whatsapp}?text=${encodeURIComponent(message)}`;
 
-  return reply.status(200).send({ whatsappUrl });
+  return reply.status(200).send({ orderId: order.id, whatsappUrl });
 }

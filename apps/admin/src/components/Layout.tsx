@@ -6,6 +6,7 @@ const navItems = [
   { to: '/artisans', label: 'Artesãs' },
   { to: '/products', label: 'Produtos' },
   { to: '/events', label: 'Eventos' },
+  { to: '/orders', label: 'Pedidos' },
   { to: '/volunteers', label: 'Voluntários' },
   { to: '/institution', label: 'Instituição' },
 ];

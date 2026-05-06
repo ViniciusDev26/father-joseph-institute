@@ -6,6 +6,7 @@ import { EventCreate } from './pages/events/EventCreate';
 import { EventList } from './pages/events/EventList';
 import { InstitutionEdit } from './pages/institution/InstitutionEdit';
 import { Login } from './pages/Login';
+import { OrderList } from './pages/orders/OrderList';
 import { ProductCreate } from './pages/products/ProductCreate';
 import { ProductList } from './pages/products/ProductList';
 import { VolunteerList } from './pages/volunteers/VolunteerList';
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
           { path: 'products/new', element: <ProductCreate /> },
           { path: 'events', element: <EventList /> },
           { path: 'events/new', element: <EventCreate /> },
+          { path: 'orders', element: <OrderList /> },
           { path: 'volunteers', element: <VolunteerList /> },
           { path: 'institution', element: <InstitutionEdit /> },
         ],

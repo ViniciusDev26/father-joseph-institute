@@ -50,6 +50,13 @@
       "when": 1776986852450,
       "tag": "0006_thin_centennial",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1778026999747,
+      "tag": "0007_create_order",
+      "breakpoints": true
     }
   ]
 }

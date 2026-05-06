@@ -73,9 +73,9 @@
 
 **Response:**
 
-| Status | Description             | Body                        |
-|--------|-------------------------|-----------------------------|
-| 200    | Checkout completed      | `{ whatsappUrl }`           |
+| Status | Description             | Body                              |
+|--------|-------------------------|-----------------------------------|
+| 200    | Checkout completed      | `{ orderId, whatsappUrl }`        |
 | 400    | Validation error        | `{ message: string }`       |
 | 404    | No open cart found      | `{ message: string }`       |
 | 422    | Cart is empty           | `{ message: string }`       |
@@ -85,6 +85,7 @@
 
 - The cart must exist and have status `open`; returns 404 otherwise.
 - The cart must have at least one item; returns 422 if empty.
+- An `Order` is created with status `pending` and a snapshot of all items (product name, unit price, quantity).
 - Cart status is set to `closed` after checkout.
 - The WhatsApp message lists each product with its quantity and unit price, and includes the total.
 - The WhatsApp number is fetched from the institution record and prefixed with `55`.
