@@ -1,4 +1,5 @@
 export * from './artisan';
+export * from './assisted-person';
 export * from './cart';
 export * from './cart-item';
 export * from './event';

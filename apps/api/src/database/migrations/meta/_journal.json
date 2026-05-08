@@ -57,6 +57,13 @@
       "when": 1778026999747,
       "tag": "0007_create_order",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1778459200000,
+      "tag": "0008_create_assisted_person",
+      "breakpoints": true
     }
   ]
 }

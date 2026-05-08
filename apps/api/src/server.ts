@@ -11,6 +11,7 @@ import {
 import { db } from './database/connection';
 import { env } from './env';
 import { artisanRoutes } from './routes/artisans';
+import { assistedPersonRoutes } from './routes/assisted-people';
 import { authProvider, authRoutes } from './routes/auth';
 import { cartRoutes } from './routes/cart';
 import { eventRoutes } from './routes/events';
@@ -66,6 +67,7 @@ await app.register(authProvider);
 
 await app.register(authRoutes);
 await app.register(artisanRoutes);
+await app.register(assistedPersonRoutes);
 await app.register(cartRoutes);
 await app.register(eventRoutes);
 await app.register(institutionRoutes);

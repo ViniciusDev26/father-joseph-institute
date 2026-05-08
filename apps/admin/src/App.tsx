@@ -2,6 +2,9 @@ import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-rou
 import { Layout } from './components/Layout';
 import { ArtisanCreate } from './pages/artisans/ArtisanCreate';
 import { ArtisanList } from './pages/artisans/ArtisanList';
+import { AssistedPersonCreate } from './pages/assisted-people/AssistedPersonCreate';
+import { AssistedPersonEdit } from './pages/assisted-people/AssistedPersonEdit';
+import { AssistedPersonList } from './pages/assisted-people/AssistedPersonList';
 import { EventCreate } from './pages/events/EventCreate';
 import { EventList } from './pages/events/EventList';
 import { InstitutionEdit } from './pages/institution/InstitutionEdit';
@@ -32,6 +35,9 @@ const router = createBrowserRouter([
           { index: true, element: <Navigate to="/artisans" replace /> },
           { path: 'artisans', element: <ArtisanList /> },
           { path: 'artisans/new', element: <ArtisanCreate /> },
+          { path: 'assisted-people', element: <AssistedPersonList /> },
+          { path: 'assisted-people/new', element: <AssistedPersonCreate /> },
+          { path: 'assisted-people/:id/edit', element: <AssistedPersonEdit /> },
           { path: 'products', element: <ProductList /> },
           { path: 'products/new', element: <ProductCreate /> },
           { path: 'events', element: <EventList /> },
