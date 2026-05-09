@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: '*.r2.cloudflarestorage.com' },
       { protocol: 'https', hostname: '*.r2.dev' },
-      { protocol: 'https', hostname: 'cvinicius.com' },
+      { protocol: 'https', hostname: 'father-public.cvinicius.com' },
     ],
   },
 };
