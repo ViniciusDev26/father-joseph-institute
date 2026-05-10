@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
+import { EventCarousel } from '@/components/event-carousel';
 import { FadeIn } from '@/components/fade-in';
 import content from '@/content.json';
 import { fetchEvents } from '@/lib/api';
@@ -76,24 +76,8 @@ export default async function EventsPage() {
               {events.map((event, i) => (
                 <FadeIn key={event.id} delay={i * 80}>
                   <article className="grid grid-cols-1 gap-8 overflow-hidden rounded-2xl border border-bark/[0.06] bg-cream-dark/40 md:grid-cols-2">
-                    {/* Photo */}
-                    <div className="relative aspect-video overflow-hidden bg-bark/[0.04] md:aspect-auto md:min-h-64">
-                      {event.photos[0] ? (
-                        <Image
-                          src={event.photos[0].url}
-                          alt={event.name}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center">
-                          <span className="text-sm text-bark-light">[Sem foto]</span>
-                        </div>
-                      )}
-                    </div>
+                    <EventCarousel photos={event.photos} alt={event.name} />
 
-                    {/* Info */}
                     <div className="flex flex-col justify-center p-8">
                       <time
                         dateTime={event.date}
@@ -106,26 +90,6 @@ export default async function EventsPage() {
                       </h2>
                       {event.description && (
                         <p className="mt-4 leading-relaxed text-bark-light">{event.description}</p>
-                      )}
-
-                      {/* Photo gallery thumbnails */}
-                      {event.photos.length > 1 && (
-                        <div className="mt-6 flex gap-2 overflow-x-auto pb-1">
-                          {event.photos.slice(1).map(photo => (
-                            <div
-                              key={photo.id}
-                              className="relative size-16 flex-shrink-0 overflow-hidden rounded-lg bg-bark/[0.04]"
-                            >
-                              <Image
-                                src={photo.url}
-                                alt=""
-                                fill
-                                className="object-cover"
-                                sizes="64px"
-                              />
-                            </div>
-                          ))}
-                        </div>
                       )}
                     </div>
                   </article>

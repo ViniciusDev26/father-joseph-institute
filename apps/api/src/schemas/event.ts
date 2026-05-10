@@ -10,6 +10,11 @@ export const eventParamsSchema = z.object({
   id: z.coerce.number().int().positive(),
 });
 
+export const eventPhotoParamsSchema = z.object({
+  id: z.coerce.number().int().positive(),
+  photoId: z.coerce.number().int().positive(),
+});
+
 export const createEventBodySchema = z.object({
   name: z.string().max(255),
   description: z.string().optional(),

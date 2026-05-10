@@ -1,4 +1,4 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { env } from '../env';
 
@@ -19,6 +19,15 @@ export async function generatePresignedPutUrl(objectKey: string, mimeType: strin
   });
 
   return getSignedUrl(s3, command, { expiresIn: 3600 });
+}
+
+export async function deleteObject(objectKey: string) {
+  await s3.send(
+    new DeleteObjectCommand({
+      Bucket: env.R2_BUCKET_NAME,
+      Key: objectKey,
+    }),
+  );
 }
 
 export function getPublicUrl(objectKey: string) {

@@ -129,6 +129,34 @@ At least one of `name`, `description`, or `date` must be provided.
 
 ---
 
+### `DELETE /events/:id/photos/:photoId`
+
+> Remove a single photo from an event. Deletes both the `event_photo` row and the underlying R2 object.
+
+**Request:**
+
+| Location | Field | Type | Required | Description |
+|----------|-------|------|----------|-------------|
+| params | id | number | yes | Event ID |
+| params | photoId | number | yes | Photo ID |
+
+**Response:**
+
+| Status | Description | Body |
+|--------|-------------|------|
+| 204 | Photo deleted | _(empty)_ |
+| 400 | Photo is the only one of the event | `{ message: string }` |
+| 401 | Missing/invalid Basic auth | `{ message: string }` |
+| 404 | Event not found, soft-deleted, or photo does not belong to it | `{ message: string }` |
+
+**Business rules:**
+
+- An event must always retain at least one photo; deleting the last one returns 400 and leaves data untouched.
+- The R2 object is deleted alongside the DB row.
+- Endpoint is protected by Basic auth.
+
+---
+
 ### `GET /events`
 
 > List all events with their photos, ordered by date descending (most recent first).

@@ -37,6 +37,7 @@ export function EventEdit() {
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [photos, setPhotos] = useState<{ id: number; url: string }[]>([]);
+  const [removedPhotoIds, setRemovedPhotoIds] = useState<number[]>([]);
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [filesError, setFilesError] = useState<string | null>(null);
 
@@ -74,7 +75,14 @@ export function EventEdit() {
     }
   };
 
+  const remainingExisting = photos.length - removedPhotoIds.length;
+  const totalAfterSave = remainingExisting + newFiles.length;
+
   const onSubmit = async (data: UpdateEventForm) => {
+    if (totalAfterSave < 1) {
+      setApiError('O evento precisa ter pelo menos uma foto.');
+      return;
+    }
     setSubmitting(true);
     setApiError(null);
     try {
@@ -100,6 +108,10 @@ export function EventEdit() {
         );
       }
 
+      for (const photoId of removedPhotoIds) {
+        await api.delete(`/events/${id}/photos/${photoId}`);
+      }
+
       navigate('/events');
     } catch (err) {
       const msg = axios.isAxiosError(err) && err.response?.data?.message;
@@ -107,6 +119,12 @@ export function EventEdit() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const togglePhotoRemoval = (photoId: number) => {
+    setRemovedPhotoIds(prev =>
+      prev.includes(photoId) ? prev.filter(id => id !== photoId) : [...prev, photoId],
+    );
   };
 
   return (
@@ -182,15 +200,33 @@ export function EventEdit() {
                   <div className="space-y-2">
                     <label className="text-sm font-medium leading-none">Fotos atuais</label>
                     <div className="grid grid-cols-3 gap-2">
-                      {photos.map(photo => (
-                        <img
-                          key={photo.id}
-                          src={photo.url}
-                          alt=""
-                          className="aspect-square w-full rounded-md object-cover"
-                        />
-                      ))}
+                      {photos.map(photo => {
+                        const markedForRemoval = removedPhotoIds.includes(photo.id);
+                        return (
+                          <div key={photo.id} className="relative">
+                            <img
+                              src={photo.url}
+                              alt=""
+                              className={`aspect-square w-full rounded-md object-cover transition ${
+                                markedForRemoval ? 'opacity-30 grayscale' : ''
+                              }`}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => togglePhotoRemoval(photo.id)}
+                              className="absolute top-1 right-1 rounded-full bg-background/90 px-2 py-0.5 text-xs font-medium shadow hover:bg-background"
+                            >
+                              {markedForRemoval ? 'Desfazer' : 'Remover'}
+                            </button>
+                          </div>
+                        );
+                      })}
                     </div>
+                    {removedPhotoIds.length > 0 && (
+                      <p className="text-xs text-muted-foreground">
+                        {removedPhotoIds.length} foto(s) serão removidas ao salvar.
+                      </p>
+                    )}
                   </div>
                 )}
 
