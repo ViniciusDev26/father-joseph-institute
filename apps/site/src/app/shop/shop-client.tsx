@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useOptimistic, useState, useTransition } from 'react';
 import type { Cart, CartItem, Product } from '@/types/content';
-import { addToCart, checkout } from './actions';
+import { addToCart, checkout, updateCartItemQuantity } from './actions';
 
 interface ShopClientProps {
   products: Product[];
@@ -79,6 +79,22 @@ export function ShopClient({ products, initialCart, content: c }: ShopClientProp
       const updated = await addToCart(product.id, 1);
       setCart(updated);
       setCartOpen(true);
+    });
+  }
+
+  function handleUpdateQuantity(item: CartItem, nextQuantity: number) {
+    if (nextQuantity < 0) return;
+    startTransition(async () => {
+      setOptimisticCart(prev => {
+        if (!prev) return prev;
+        const items =
+          nextQuantity === 0
+            ? prev.items.filter(i => i.id !== item.id)
+            : prev.items.map(i => (i.id === item.id ? { ...i, quantity: nextQuantity } : i));
+        return { ...prev, items };
+      });
+      const updated = await updateCartItemQuantity(item.id, nextQuantity);
+      if (updated) setCart(updated);
     });
   }
 
@@ -164,30 +180,66 @@ export function ShopClient({ products, initialCart, content: c }: ShopClientProp
                 <p className="mt-8 text-center text-bark-light">{c.cart.empty}</p>
               ) : (
                 <ul className="space-y-4">
-                  {optimisticCart.items.map(item => (
-                    <li key={item.product.id} className="flex gap-4">
-                      <div className="relative size-16 flex-shrink-0 overflow-hidden rounded-xl bg-bark/[0.04]">
-                        {item.product.photoUrl && (
-                          <Image
-                            src={item.product.photoUrl}
-                            alt={item.product.name}
-                            fill
-                            className="object-cover"
-                            sizes="64px"
-                          />
-                        )}
-                      </div>
-                      <div className="flex flex-1 flex-col justify-center">
-                        <p className="font-medium text-bark">{item.product.name}</p>
-                        <p className="text-sm text-bark-light">
-                          {item.quantity}× {formatPrice(item.product.price)}
+                  {optimisticCart.items.map(item => {
+                    const controlsDisabled = isPending || item.id === 0;
+                    return (
+                      <li key={item.product.id} className="flex gap-4">
+                        <div className="relative size-16 flex-shrink-0 overflow-hidden rounded-xl bg-bark/[0.04]">
+                          {item.product.photoUrl && (
+                            <Image
+                              src={item.product.photoUrl}
+                              alt={item.product.name}
+                              fill
+                              className="object-cover"
+                              sizes="64px"
+                            />
+                          )}
+                        </div>
+                        <div className="flex flex-1 flex-col justify-center gap-2">
+                          <p className="font-medium text-bark">{item.product.name}</p>
+                          <p className="text-sm text-bark-light">
+                            {formatPrice(item.product.price)}
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center rounded-full border border-bark/15">
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateQuantity(item, item.quantity - 1)}
+                                disabled={controlsDisabled}
+                                className="flex size-7 items-center justify-center rounded-full text-bark transition-colors hover:bg-bark/5 disabled:opacity-40"
+                                aria-label="Diminuir quantidade"
+                              >
+                                −
+                              </button>
+                              <span className="w-7 text-center text-sm font-medium text-bark">
+                                {item.quantity}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateQuantity(item, item.quantity + 1)}
+                                disabled={controlsDisabled}
+                                className="flex size-7 items-center justify-center rounded-full text-bark transition-colors hover:bg-bark/5 disabled:opacity-40"
+                                aria-label="Aumentar quantidade"
+                              >
+                                +
+                              </button>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateQuantity(item, 0)}
+                              disabled={controlsDisabled}
+                              className="text-xs text-bark-light underline-offset-2 transition-colors hover:text-terracotta hover:underline disabled:opacity-40"
+                            >
+                              {c.cart.remove}
+                            </button>
+                          </div>
+                        </div>
+                        <p className="self-center font-semibold text-bark">
+                          {formatPrice(item.quantity * item.product.price)}
                         </p>
-                      </div>
-                      <p className="self-center font-semibold text-bark">
-                        {formatPrice(item.quantity * item.product.price)}
-                      </p>
-                    </li>
-                  ))}
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </div>

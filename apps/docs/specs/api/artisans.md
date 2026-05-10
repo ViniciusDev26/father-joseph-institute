@@ -69,3 +69,90 @@ No parameters.
 - At least one of `phone` or `email` must be provided.
 - `photoUrl` in the response is the full public URL (`R2_PUBLIC_URL` + `object_key`).
 - `presignedUrl` is a temporary presigned PUT URL for the client to upload the photo directly to R2.
+
+---
+
+### `GET /artisans/:id`
+
+> Get a single artisan by ID. Used to prefill the admin edit form.
+
+**Request:**
+
+| Location | Field | Type   | Required | Description |
+|----------|-------|--------|----------|-------------|
+| params   | id    | number | yes      | Artisan ID  |
+
+**Response:**
+
+| Status | Description                       | Body                                                |
+|--------|-----------------------------------|-----------------------------------------------------|
+| 200    | Artisan found                     | `{ id, name, photoUrl, phone, email, description }` |
+| 401    | Missing/invalid Basic auth        | `{ message: string }`                               |
+| 404    | Artisan not found or soft-deleted | `{ message: string }`                               |
+
+**Business rules:**
+
+- Soft-deleted artisans return 404.
+- Endpoint is protected by Basic auth.
+
+---
+
+### `PATCH /artisans/:id`
+
+> Update an artisan's metadata. The photo is not modified by this endpoint.
+
+**Request:**
+
+| Location | Field       | Type           | Required | Description                                |
+|----------|-------------|----------------|----------|--------------------------------------------|
+| params   | id          | number         | yes      | Artisan ID                                 |
+| body     | name        | string         | no       | New name (1–255 chars)                     |
+| body     | phone       | string \| null | no       | New phone (11 digits) or `null` to clear   |
+| body     | email       | string \| null | no       | New email or `null` to clear               |
+| body     | description | string \| null | no       | New description or `null` to clear         |
+
+At least one of `name`, `phone`, `email`, or `description` must be provided.
+
+**Response:**
+
+| Status | Description                       | Body                                                |
+|--------|-----------------------------------|-----------------------------------------------------|
+| 200    | Artisan updated                   | `{ id, name, photoUrl, phone, email, description }` |
+| 400    | Validation error or empty body    | `{ message: string }`                               |
+| 401    | Missing/invalid Basic auth        | `{ message: string }`                               |
+| 404    | Artisan not found or soft-deleted | `{ message: string }`                               |
+
+**Business rules:**
+
+- Only the provided fields are updated; omitted fields are left unchanged.
+- After the update, at least one of `phone` or `email` must remain non-null; otherwise returns 400.
+- `updated_at` is refreshed on every successful update.
+- Soft-deleted artisans return 404 and are not modified.
+- The photo is not editable via this endpoint.
+- Endpoint is protected by Basic auth.
+
+---
+
+### `DELETE /artisans/:id`
+
+> Soft-delete an artisan.
+
+**Request:**
+
+| Location | Field | Type   | Required | Description |
+|----------|-------|--------|----------|-------------|
+| params   | id    | number | yes      | Artisan ID  |
+
+**Response:**
+
+| Status | Description                       | Body                  |
+|--------|-----------------------------------|-----------------------|
+| 204    | Artisan soft-deleted              | (empty)               |
+| 401    | Missing/invalid Basic auth        | `{ message: string }` |
+| 404    | Artisan not found or soft-deleted | `{ message: string }` |
+
+**Business rules:**
+
+- Sets `deleted_at` to the current timestamp.
+- Already soft-deleted artisans return 404.
+- Endpoint is protected by Basic auth.

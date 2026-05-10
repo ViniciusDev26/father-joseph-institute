@@ -1,17 +1,28 @@
 import { randomUUID } from 'node:crypto';
-import { desc, eq, isNull } from 'drizzle-orm';
+import { and, desc, eq, isNull } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { db } from '../database/connection';
 import { eventPhotos, events } from '../database/schema';
 import { generatePresignedPutUrl, getPublicUrl } from '../lib/storage';
 import {
+  addEventPhotosBodySchema,
+  addEventPhotosResponseSchema,
   createEventBodySchema,
   createEventResponseSchema,
+  eventParamsSchema,
+  getEventResponseSchema,
   listEventsResponseSchema,
+  updateEventBodySchema,
+  updateEventResponseSchema,
 } from '../schemas/event';
 import { errorResponseSchema } from '../schemas/shared';
-import type { CreateEventBody } from '../types/event';
+import type {
+  AddEventPhotosBody,
+  CreateEventBody,
+  EventParams,
+  UpdateEventBody,
+} from '../types/event';
 
 export async function eventRoutes(app: FastifyInstance) {
   const listEventsSchema = {
@@ -19,6 +30,17 @@ export async function eventRoutes(app: FastifyInstance) {
     tags: ['Events'],
     response: {
       200: listEventsResponseSchema,
+    },
+  };
+
+  const getEventSchema = {
+    description: 'Get a single event by ID',
+    tags: ['Events'],
+    params: eventParamsSchema,
+    response: {
+      200: getEventResponseSchema,
+      401: errorResponseSchema,
+      404: errorResponseSchema,
     },
   };
 
@@ -32,9 +54,36 @@ export async function eventRoutes(app: FastifyInstance) {
     },
   };
 
+  const updateEventSchema = {
+    description: 'Update an event',
+    tags: ['Events'],
+    params: eventParamsSchema,
+    body: updateEventBodySchema,
+    response: {
+      200: updateEventResponseSchema,
+      400: errorResponseSchema,
+      401: errorResponseSchema,
+      404: errorResponseSchema,
+    },
+  };
+
+  const addEventPhotosSchema = {
+    description: 'Add new photos to an existing event',
+    tags: ['Events'],
+    params: eventParamsSchema,
+    body: addEventPhotosBodySchema,
+    response: {
+      201: addEventPhotosResponseSchema,
+      400: errorResponseSchema,
+      401: errorResponseSchema,
+      404: errorResponseSchema,
+    },
+  };
+
   app
     .withTypeProvider<ZodTypeProvider>()
     .get('/events', { schema: listEventsSchema }, listEvents)
+    .get('/events/:id', { schema: getEventSchema, preHandler: [app.authenticate] }, getEvent)
     .post(
       '/events',
       {
@@ -42,7 +91,50 @@ export async function eventRoutes(app: FastifyInstance) {
         preHandler: [app.authenticate],
       },
       createEvent,
+    )
+    .patch(
+      '/events/:id',
+      { schema: updateEventSchema, preHandler: [app.authenticate] },
+      updateEvent,
+    )
+    .post(
+      '/events/:id/photos',
+      { schema: addEventPhotosSchema, preHandler: [app.authenticate] },
+      addEventPhotos,
     );
+}
+
+async function loadEventWithPhotos(eventId: number) {
+  const rows = await db
+    .select({
+      id: events.id,
+      name: events.name,
+      description: events.description,
+      date: events.date,
+      photoId: eventPhotos.id,
+      objectKey: eventPhotos.objectKey,
+    })
+    .from(events)
+    .leftJoin(eventPhotos, eq(eventPhotos.eventId, events.id))
+    .where(and(eq(events.id, eventId), isNull(events.deletedAt)));
+
+  if (rows.length === 0) return null;
+
+  const first = rows[0];
+  const photos: { id: number; url: string }[] = [];
+  for (const row of rows) {
+    if (row.photoId && row.objectKey) {
+      photos.push({ id: row.photoId, url: getPublicUrl(row.objectKey) });
+    }
+  }
+
+  return {
+    id: first.id,
+    name: first.name,
+    description: first.description,
+    date: first.date.toISOString(),
+    photos,
+  };
 }
 
 async function listEvents(_request: FastifyRequest, reply: FastifyReply) {
@@ -96,6 +188,24 @@ async function listEvents(_request: FastifyRequest, reply: FastifyReply) {
   return reply.status(200).send({ events: [...eventsMap.values()] });
 }
 
+async function getEvent(
+  request: FastifyRequest<{ Params: EventParams }>,
+  reply: FastifyReply,
+) {
+  const event = await loadEventWithPhotos(request.params.id);
+
+  if (!event) {
+    return reply.status(404).send({
+      statusCode: 404,
+      code: 'EVENT_NOT_FOUND',
+      error: 'Not Found',
+      message: 'Event not found',
+    });
+  }
+
+  return reply.status(200).send(event);
+}
+
 async function createEvent(
   request: FastifyRequest<{ Body: CreateEventBody }>,
   reply: FastifyReply,
@@ -142,4 +252,98 @@ async function createEvent(
     date: event.date.toISOString(),
     photos: photosResult,
   });
+}
+
+async function updateEvent(
+  request: FastifyRequest<{ Params: EventParams; Body: UpdateEventBody }>,
+  reply: FastifyReply,
+) {
+  const { id } = request.params;
+  const { name, description, date } = request.body;
+
+  const updates: {
+    name?: string;
+    description?: string | null;
+    date?: Date;
+    updatedAt: Date;
+  } = { updatedAt: new Date() };
+  if (name !== undefined) updates.name = name;
+  if (description !== undefined) updates.description = description;
+  if (date !== undefined) updates.date = new Date(date);
+
+  const [updated] = await db
+    .update(events)
+    .set(updates)
+    .where(and(eq(events.id, id), isNull(events.deletedAt)))
+    .returning();
+
+  if (!updated) {
+    return reply.status(404).send({
+      statusCode: 404,
+      code: 'EVENT_NOT_FOUND',
+      error: 'Not Found',
+      message: 'Event not found',
+    });
+  }
+
+  const event = await loadEventWithPhotos(updated.id);
+  if (!event) {
+    return reply.status(404).send({
+      statusCode: 404,
+      code: 'EVENT_NOT_FOUND',
+      error: 'Not Found',
+      message: 'Event not found',
+    });
+  }
+
+  return reply.status(200).send(event);
+}
+
+async function addEventPhotos(
+  request: FastifyRequest<{ Params: EventParams; Body: AddEventPhotosBody }>,
+  reply: FastifyReply,
+) {
+  const { id } = request.params;
+  const { photos } = request.body;
+
+  const [event] = await db
+    .select({ id: events.id })
+    .from(events)
+    .where(and(eq(events.id, id), isNull(events.deletedAt)))
+    .limit(1);
+
+  if (!event) {
+    return reply.status(404).send({
+      statusCode: 404,
+      code: 'EVENT_NOT_FOUND',
+      error: 'Not Found',
+      message: 'Event not found',
+    });
+  }
+
+  const photosResult = await Promise.all(
+    photos.map(async photo => {
+      const ext = photo.mimeType === 'image/png' ? 'png' : 'jpg';
+      const objectKey = `events/${event.id}/${randomUUID()}.${ext}`;
+
+      const [inserted] = await db
+        .insert(eventPhotos)
+        .values({
+          eventId: event.id,
+          objectKey,
+          mimeType: photo.mimeType,
+        })
+        .returning();
+
+      const presignedUrl = await generatePresignedPutUrl(objectKey, photo.mimeType);
+
+      return {
+        id: inserted.id,
+        url: getPublicUrl(objectKey),
+        presignedUrl,
+      };
+    }),
+  );
+
+  return reply.status(201).send({ photos: photosResult });
 }

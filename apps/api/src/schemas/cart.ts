@@ -39,6 +39,17 @@ export const getCartParamsSchema = z.object({
   sessionId: z.string().uuid(),
 });
 
+export const updateCartItemParamsSchema = z.object({
+  itemId: z.coerce.number().int().positive(),
+});
+
+export const updateCartItemBodySchema = z.object({
+  sessionId: z.string().uuid(),
+  quantity: z.number().int().min(0),
+});
+
+export const updateCartItemResponseSchema = getCartResponseSchema;
+
 export const checkoutBodySchema = z.object({
   sessionId: z.string().uuid(),
 });

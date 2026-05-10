@@ -1,16 +1,21 @@
-import { eq, isNull } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
+import { z } from 'zod/v4';
 import { db } from '../database/connection';
 import { artisans } from '../database/schema';
 import { generatePresignedPutUrl, getPublicUrl } from '../lib/storage';
 import {
+  artisanParamsSchema,
   createArtisanBodySchema,
   createArtisanResponseSchema,
+  getArtisanResponseSchema,
   listArtisansResponseSchema,
+  updateArtisanBodySchema,
+  updateArtisanResponseSchema,
 } from '../schemas/artisan';
 import { errorResponseSchema } from '../schemas/shared';
-import type { CreateArtisanBody } from '../types/artisan';
+import type { ArtisanParams, CreateArtisanBody, UpdateArtisanBody } from '../types/artisan';
 
 export async function artisanRoutes(app: FastifyInstance) {
   const listArtisansSchema = {
@@ -18,6 +23,17 @@ export async function artisanRoutes(app: FastifyInstance) {
     tags: ['Artisans'],
     response: {
       200: listArtisansResponseSchema,
+    },
+  };
+
+  const getArtisanSchema = {
+    description: 'Get a single artisan by ID',
+    tags: ['Artisans'],
+    params: artisanParamsSchema,
+    response: {
+      200: getArtisanResponseSchema,
+      401: errorResponseSchema,
+      404: errorResponseSchema,
     },
   };
 
@@ -31,9 +47,34 @@ export async function artisanRoutes(app: FastifyInstance) {
     },
   };
 
+  const updateArtisanSchema = {
+    description: 'Update an artisan',
+    tags: ['Artisans'],
+    params: artisanParamsSchema,
+    body: updateArtisanBodySchema,
+    response: {
+      200: updateArtisanResponseSchema,
+      400: errorResponseSchema,
+      401: errorResponseSchema,
+      404: errorResponseSchema,
+    },
+  };
+
+  const deleteArtisanSchema = {
+    description: 'Soft-delete an artisan',
+    tags: ['Artisans'],
+    params: artisanParamsSchema,
+    response: {
+      204: z.null(),
+      401: errorResponseSchema,
+      404: errorResponseSchema,
+    },
+  };
+
   app
     .withTypeProvider<ZodTypeProvider>()
     .get('/artisans', { schema: listArtisansSchema }, listArtisans)
+    .get('/artisans/:id', { schema: getArtisanSchema, preHandler: [app.authenticate] }, getArtisan)
     .post(
       '/artisans',
       {
@@ -41,6 +82,16 @@ export async function artisanRoutes(app: FastifyInstance) {
         preHandler: [app.authenticate],
       },
       createArtisan,
+    )
+    .patch(
+      '/artisans/:id',
+      { schema: updateArtisanSchema, preHandler: [app.authenticate] },
+      updateArtisan,
+    )
+    .delete(
+      '/artisans/:id',
+      { schema: deleteArtisanSchema, preHandler: [app.authenticate] },
+      deleteArtisan,
     );
 }
 
@@ -56,6 +107,34 @@ async function listArtisans(_request: FastifyRequest, reply: FastifyReply) {
       email: artisan.email ?? null,
       description: artisan.description ?? null,
     })),
+  });
+}
+
+async function getArtisan(request: FastifyRequest<{ Params: ArtisanParams }>, reply: FastifyReply) {
+  const { id } = request.params;
+
+  const [artisan] = await db
+    .select()
+    .from(artisans)
+    .where(and(eq(artisans.id, id), isNull(artisans.deletedAt)))
+    .limit(1);
+
+  if (!artisan) {
+    return reply.status(404).send({
+      statusCode: 404,
+      code: 'ARTISAN_NOT_FOUND',
+      error: 'Not Found',
+      message: 'Artisan not found',
+    });
+  }
+
+  return reply.status(200).send({
+    id: artisan.id,
+    name: artisan.name,
+    photoUrl: getPublicUrl(artisan.photoObjectKey),
+    phone: artisan.phone ?? null,
+    email: artisan.email ?? null,
+    description: artisan.description ?? null,
   });
 }
 
@@ -98,4 +177,99 @@ async function createArtisan(
     email: updated.email ?? null,
     description: updated.description ?? null,
   });
+}
+
+async function updateArtisan(
+  request: FastifyRequest<{ Params: ArtisanParams; Body: UpdateArtisanBody }>,
+  reply: FastifyReply,
+) {
+  const { id } = request.params;
+  const { name, phone, email, description } = request.body;
+
+  const [current] = await db
+    .select()
+    .from(artisans)
+    .where(and(eq(artisans.id, id), isNull(artisans.deletedAt)))
+    .limit(1);
+
+  if (!current) {
+    return reply.status(404).send({
+      statusCode: 404,
+      code: 'ARTISAN_NOT_FOUND',
+      error: 'Not Found',
+      message: 'Artisan not found',
+    });
+  }
+
+  const nextPhone = phone === undefined ? current.phone : phone;
+  const nextEmail = email === undefined ? current.email : email;
+
+  if (nextPhone === null && nextEmail === null) {
+    return reply.status(400).send({
+      statusCode: 400,
+      code: 'ARTISAN_CONTACT_REQUIRED',
+      error: 'Bad Request',
+      message: 'At least one of phone or email must remain set',
+    });
+  }
+
+  const updates: {
+    name?: string;
+    phone?: string | null;
+    email?: string | null;
+    description?: string | null;
+    updatedAt: Date;
+  } = { updatedAt: new Date() };
+  if (name !== undefined) updates.name = name;
+  if (phone !== undefined) updates.phone = phone;
+  if (email !== undefined) updates.email = email;
+  if (description !== undefined) updates.description = description;
+
+  const [updated] = await db
+    .update(artisans)
+    .set(updates)
+    .where(and(eq(artisans.id, id), isNull(artisans.deletedAt)))
+    .returning();
+
+  if (!updated) {
+    return reply.status(404).send({
+      statusCode: 404,
+      code: 'ARTISAN_NOT_FOUND',
+      error: 'Not Found',
+      message: 'Artisan not found',
+    });
+  }
+
+  return reply.status(200).send({
+    id: updated.id,
+    name: updated.name,
+    photoUrl: getPublicUrl(updated.photoObjectKey),
+    phone: updated.phone ?? null,
+    email: updated.email ?? null,
+    description: updated.description ?? null,
+  });
+}
+
+async function deleteArtisan(
+  request: FastifyRequest<{ Params: ArtisanParams }>,
+  reply: FastifyReply,
+) {
+  const { id } = request.params;
+
+  const [deleted] = await db
+    .update(artisans)
+    .set({ deletedAt: new Date() })
+    .where(and(eq(artisans.id, id), isNull(artisans.deletedAt)))
+    .returning({ id: artisans.id });
+
+  if (!deleted) {
+    return reply.status(404).send({
+      statusCode: 404,
+      code: 'ARTISAN_NOT_FOUND',
+      error: 'Not Found',
+      message: 'Artisan not found',
+    });
+  }
+
+  return reply.status(204).send();
 }

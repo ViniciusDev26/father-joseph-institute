@@ -49,6 +49,28 @@ export async function addToCart(productId: number, quantity: number): Promise<Ca
   }
 }
 
+export async function updateCartItemQuantity(
+  itemId: number,
+  quantity: number,
+): Promise<Cart | null> {
+  const cookieStore = await cookies();
+  const sessionId = cookieStore.get(COOKIE_NAME)?.value;
+  if (!sessionId) return null;
+
+  try {
+    const res = await fetch(`${env.API_URL}/cart/items/${itemId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId, quantity }),
+      cache: 'no-store',
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as Cart;
+  } catch {
+    return null;
+  }
+}
+
 export async function checkout(): Promise<string | null> {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get(COOKIE_NAME)?.value;

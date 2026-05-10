@@ -60,7 +60,10 @@ export function EventList() {
           <div className="space-y-3 md:hidden">
             {events.map((e, i) => (
               <FadeIn key={e.id} delay={i * 60}>
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <Link
+                  to={`/events/${e.id}/edit`}
+                  className="block bg-white rounded-lg border border-gray-200 p-4 hover:border-primary/40 transition-colors"
+                >
                   <div className="flex items-start justify-between gap-2">
                     <p className="font-medium text-gray-900 text-sm">{e.name}</p>
                     <span className="text-xs text-gray-400 whitespace-nowrap">
@@ -71,7 +74,7 @@ export function EventList() {
                   {e.description && (
                     <p className="text-xs text-gray-400 mt-1 line-clamp-2">{e.description}</p>
                   )}
-                </div>
+                </Link>
               </FadeIn>
             ))}
           </div>
@@ -86,6 +89,7 @@ export function EventList() {
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Data</th>
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Descrição</th>
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Fotos</th>
+                    <th className="text-right px-4 py-3 font-medium text-gray-600">Ações</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -97,6 +101,14 @@ export function EventList() {
                         {e.description ?? '—'}
                       </td>
                       <td className="px-4 py-3 text-gray-600">{e.photos.length}</td>
+                      <td className="px-4 py-3 text-right">
+                        <Link
+                          to={`/events/${e.id}/edit`}
+                          className="text-sm text-primary hover:underline"
+                        >
+                          Editar
+                        </Link>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

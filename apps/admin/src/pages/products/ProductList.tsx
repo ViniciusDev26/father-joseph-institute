@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FadeIn } from '@/components/FadeIn';
@@ -19,6 +20,18 @@ export function ProductList() {
       .catch(() => setError('Erro ao carregar produtos'))
       .finally(() => setLoading(false));
   }, []);
+
+  const handleDelete = async (id: number) => {
+    if (!window.confirm('Tem certeza que deseja remover este produto?')) return;
+    try {
+      await api.delete(`/products/${id}`);
+      setProducts(prev => prev.filter(p => p.id !== id));
+    } catch (err) {
+      const msg =
+        (axios.isAxiosError(err) && err.response?.data?.message) || 'Erro ao remover produto';
+      window.alert(msg);
+    }
+  };
 
   return (
     <div className="p-4 md:p-8">
@@ -60,7 +73,7 @@ export function ProductList() {
                   ) : (
                     <div className="w-14 h-14 rounded bg-gray-100 flex-shrink-0" />
                   )}
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="font-medium text-gray-900 text-sm">{p.name}</p>
                     <p className="text-sm font-mono text-primary mt-0.5">R$ {p.price.toFixed(2)}</p>
                     {p.artisans.length > 0 && (
@@ -68,6 +81,21 @@ export function ProductList() {
                         {p.artisans.map(a => a.name).join(', ')}
                       </p>
                     )}
+                    <div className="flex gap-3 mt-3">
+                      <Link
+                        to={`/products/${p.id}/edit`}
+                        className="text-xs font-medium text-primary hover:underline"
+                      >
+                        Editar
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(p.id)}
+                        className="text-xs font-medium text-red-600 hover:underline"
+                      >
+                        Excluir
+                      </button>
+                    </div>
                   </div>
                 </div>
               </FadeIn>
@@ -85,6 +113,7 @@ export function ProductList() {
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Preço</th>
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Artesãs</th>
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Fotos</th>
+                    <th className="text-right px-4 py-3 font-medium text-gray-600 w-40">Ações</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -107,6 +136,21 @@ export function ProductList() {
                         {p.artisans.map(a => a.name).join(', ') || '—'}
                       </td>
                       <td className="px-4 py-3 text-gray-600">{p.photos.length}</td>
+                      <td className="px-4 py-3 text-right space-x-3">
+                        <Link
+                          to={`/products/${p.id}/edit`}
+                          className="text-xs font-medium text-primary hover:underline"
+                        >
+                          Editar
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(p.id)}
+                          className="text-xs font-medium text-red-600 hover:underline"
+                        >
+                          Excluir
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

@@ -61,6 +61,36 @@
 
 ---
 
+### `PATCH /cart/items/:itemId`
+
+> Update the quantity of a cart item. If the new quantity is 0, the item is removed from the cart.
+
+**Request:**
+
+| Location | Field      | Type   | Required | Description                                              |
+|----------|------------|--------|----------|----------------------------------------------------------|
+| params   | itemId     | number | yes      | ID of the cart item to update                            |
+| body     | sessionId  | string | yes      | Client-generated UUID identifying the browser session    |
+| body     | quantity   | number | yes      | New quantity (integer, min 0). 0 removes the item        |
+
+**Response:**
+
+| Status | Description           | Body                                                                                          |
+|--------|-----------------------|-----------------------------------------------------------------------------------------------|
+| 200    | Item updated/removed  | `{ cartId, sessionId, items: [{ id, quantity, product: { id, name, price, photoUrl } }] }`   |
+| 400    | Validation error      | `{ message: string }`                                                                         |
+| 404    | Cart or item not found | `{ message: string }`                                                                        |
+
+**Business rules:**
+
+- The cart must exist for the given `sessionId` with status `open`; returns 404 otherwise.
+- The item must belong to the cart; returns 404 otherwise.
+- If `quantity` is 0, the cart item is removed.
+- Otherwise, the cart item's `quantity` is set to the given value.
+- Returns the updated cart with full item/product details (same shape as `GET /cart/:sessionId`).
+
+---
+
 ### `POST /cart/checkout`
 
 > Checkout the cart. Generates a pre-filled WhatsApp message with the cart contents and closes the cart.

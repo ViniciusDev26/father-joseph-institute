@@ -1,16 +1,19 @@
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ArtisanCreate } from './pages/artisans/ArtisanCreate';
+import { ArtisanEdit } from './pages/artisans/ArtisanEdit';
 import { ArtisanList } from './pages/artisans/ArtisanList';
 import { AssistedPersonCreate } from './pages/assisted-people/AssistedPersonCreate';
 import { AssistedPersonEdit } from './pages/assisted-people/AssistedPersonEdit';
 import { AssistedPersonList } from './pages/assisted-people/AssistedPersonList';
 import { EventCreate } from './pages/events/EventCreate';
+import { EventEdit } from './pages/events/EventEdit';
 import { EventList } from './pages/events/EventList';
 import { InstitutionEdit } from './pages/institution/InstitutionEdit';
 import { Login } from './pages/Login';
 import { OrderList } from './pages/orders/OrderList';
 import { ProductCreate } from './pages/products/ProductCreate';
+import { ProductEdit } from './pages/products/ProductEdit';
 import { ProductList } from './pages/products/ProductList';
 import { VolunteerList } from './pages/volunteers/VolunteerList';
 import { useAuthStore } from './store/useAuthStore';
@@ -35,13 +38,16 @@ const router = createBrowserRouter([
           { index: true, element: <Navigate to="/artisans" replace /> },
           { path: 'artisans', element: <ArtisanList /> },
           { path: 'artisans/new', element: <ArtisanCreate /> },
+          { path: 'artisans/:id/edit', element: <ArtisanEdit /> },
           { path: 'assisted-people', element: <AssistedPersonList /> },
           { path: 'assisted-people/new', element: <AssistedPersonCreate /> },
           { path: 'assisted-people/:id/edit', element: <AssistedPersonEdit /> },
           { path: 'products', element: <ProductList /> },
           { path: 'products/new', element: <ProductCreate /> },
+          { path: 'products/:id/edit', element: <ProductEdit /> },
           { path: 'events', element: <EventList /> },
           { path: 'events/new', element: <EventCreate /> },
+          { path: 'events/:id/edit', element: <EventEdit /> },
           { path: 'orders', element: <OrderList /> },
           { path: 'volunteers', element: <VolunteerList /> },
           { path: 'institution', element: <InstitutionEdit /> },

@@ -1,6 +1,10 @@
 import { z } from 'zod/v4';
 import { mimeTypeSchema } from './shared';
 
+export const artisanParamsSchema = z.object({
+  id: z.coerce.number().int().positive(),
+});
+
 export const createArtisanBodySchema = z
   .object({
     name: z.string().max(255),
@@ -28,7 +32,7 @@ export const createArtisanResponseSchema = z.object({
   description: z.string().nullable(),
 });
 
-const listArtisanItemSchema = z.object({
+const artisanItemSchema = z.object({
   id: z.number(),
   name: z.string(),
   photoUrl: z.string(),
@@ -38,5 +42,29 @@ const listArtisanItemSchema = z.object({
 });
 
 export const listArtisansResponseSchema = z.object({
-  artisans: z.array(listArtisanItemSchema),
+  artisans: z.array(artisanItemSchema),
 });
+
+export const getArtisanResponseSchema = artisanItemSchema;
+
+export const updateArtisanBodySchema = z
+  .object({
+    name: z.string().min(1).max(255).optional(),
+    phone: z
+      .string()
+      .regex(/^\d{11}$/, 'phone must contain exactly 11 digits')
+      .nullable()
+      .optional(),
+    email: z.email().nullable().optional(),
+    description: z.string().nullable().optional(),
+  })
+  .refine(
+    data =>
+      data.name !== undefined ||
+      data.phone !== undefined ||
+      data.email !== undefined ||
+      data.description !== undefined,
+    { message: 'At least one of name, phone, email or description must be provided' },
+  );
+
+export const updateArtisanResponseSchema = artisanItemSchema;

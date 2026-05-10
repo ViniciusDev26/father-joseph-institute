@@ -28,17 +28,20 @@ This directory is the **single source of truth** for what the application should
 
 ### Backend: Features
 
+- [Add Event Photos](./backend/features/add-event-photos.md)
 - [Add to Cart](./backend/features/add-to-cart.md)
 - [Checkout](./backend/features/checkout.md)
 - [Create Artisan](./backend/features/create-artisan.md)
 - [Create Event](./backend/features/create-event.md)
 - [Create Product](./backend/features/create-product.md)
 - [Get Cart](./backend/features/get-cart.md)
+- [Get Event](./backend/features/get-event.md)
 - [Get Institution](./backend/features/get-institution.md)
 - [List Artisans](./backend/features/list-artisans.md)
 - [List Events](./backend/features/list-events.md)
 - [List Products](./backend/features/list-products.md)
 - [Register Volunteer](./backend/features/register-volunteer.md)
+- [Update Event](./backend/features/update-event.md)
 - [Update Institution](./backend/features/update-institution.md)
 - [Validate Auth](./backend/features/validate-auth.md)
 

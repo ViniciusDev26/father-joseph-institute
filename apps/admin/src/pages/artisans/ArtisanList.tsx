@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FadeIn } from '@/components/FadeIn';
@@ -19,6 +20,18 @@ export function ArtisanList() {
       .catch(() => setError('Erro ao carregar artesãs'))
       .finally(() => setLoading(false));
   }, []);
+
+  const handleDelete = async (id: number) => {
+    if (!window.confirm('Tem certeza que deseja remover esta artesã?')) return;
+    try {
+      await api.delete(`/artisans/${id}`);
+      setArtisans(prev => prev.filter(a => a.id !== id));
+    } catch (err) {
+      const msg =
+        (axios.isAxiosError(err) && err.response?.data?.message) || 'Erro ao remover artesã';
+      window.alert(msg);
+    }
+  };
 
   return (
     <div className="p-4 md:p-8">
@@ -56,13 +69,28 @@ export function ArtisanList() {
                     alt={a.name}
                     className="w-12 h-12 rounded-full object-cover flex-shrink-0"
                   />
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="font-medium text-gray-900 text-sm">{a.name}</p>
                     {a.phone && <p className="text-xs text-gray-500 mt-0.5">{a.phone}</p>}
                     {a.email && <p className="text-xs text-gray-500">{a.email}</p>}
                     {a.description && (
                       <p className="text-xs text-gray-400 mt-1 line-clamp-2">{a.description}</p>
                     )}
+                    <div className="flex gap-3 mt-3">
+                      <Link
+                        to={`/artisans/${a.id}/edit`}
+                        className="text-xs font-medium text-primary hover:underline"
+                      >
+                        Editar
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(a.id)}
+                        className="text-xs font-medium text-red-600 hover:underline"
+                      >
+                        Excluir
+                      </button>
+                    </div>
                   </div>
                 </div>
               </FadeIn>
@@ -80,6 +108,7 @@ export function ArtisanList() {
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Telefone</th>
                     <th className="text-left px-4 py-3 font-medium text-gray-600">E-mail</th>
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Descrição</th>
+                    <th className="text-right px-4 py-3 font-medium text-gray-600 w-40">Ações</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -97,6 +126,21 @@ export function ArtisanList() {
                       <td className="px-4 py-3 text-gray-600">{a.email ?? '—'}</td>
                       <td className="px-4 py-3 text-gray-600 max-w-xs truncate">
                         {a.description ?? '—'}
+                      </td>
+                      <td className="px-4 py-3 text-right space-x-3">
+                        <Link
+                          to={`/artisans/${a.id}/edit`}
+                          className="text-xs font-medium text-primary hover:underline"
+                        >
+                          Editar
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(a.id)}
+                          className="text-xs font-medium text-red-600 hover:underline"
+                        >
+                          Excluir
+                        </button>
                       </td>
                     </tr>
                   ))}

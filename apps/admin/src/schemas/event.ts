@@ -18,5 +18,12 @@ export const createEventSchema = z.object({
   date: z.string().min(1, 'Data é obrigatória'),
 });
 
+export const updateEventSchema = z.object({
+  name: z.string().min(1, 'Nome é obrigatório').max(255),
+  description: z.string().optional(),
+  date: z.string().min(1, 'Data é obrigatória'),
+});
+
 export type Event = z.infer<typeof eventSchema>;
 export type CreateEventForm = z.infer<typeof createEventSchema>;
+export type UpdateEventForm = z.infer<typeof updateEventSchema>;

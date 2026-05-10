@@ -19,9 +19,18 @@ import {
   checkoutResponseSchema,
   getCartParamsSchema,
   getCartResponseSchema,
+  updateCartItemBodySchema,
+  updateCartItemParamsSchema,
+  updateCartItemResponseSchema,
 } from '../schemas/cart';
 import { errorResponseSchema } from '../schemas/shared';
-import type { AddToCartBody, CheckoutBody, GetCartParams } from '../types/cart';
+import type {
+  AddToCartBody,
+  CheckoutBody,
+  GetCartParams,
+  UpdateCartItemBody,
+  UpdateCartItemParams,
+} from '../types/cart';
 
 export async function cartRoutes(app: FastifyInstance) {
   const getCartSchema = {
@@ -45,6 +54,18 @@ export async function cartRoutes(app: FastifyInstance) {
     },
   };
 
+  const updateCartItemSchema = {
+    description: 'Update the quantity of a cart item; quantity 0 removes it',
+    tags: ['Cart'],
+    params: updateCartItemParamsSchema,
+    body: updateCartItemBodySchema,
+    response: {
+      200: updateCartItemResponseSchema,
+      400: errorResponseSchema,
+      404: errorResponseSchema,
+    },
+  };
+
   const checkoutSchema = {
     description: 'Checkout the cart and get a pre-filled WhatsApp URL',
     tags: ['Cart'],
@@ -61,27 +82,11 @@ export async function cartRoutes(app: FastifyInstance) {
     .withTypeProvider<ZodTypeProvider>()
     .get('/cart/:sessionId', { schema: getCartSchema }, getCart)
     .post('/cart/items', { schema: addToCartSchema }, addToCart)
+    .patch('/cart/items/:itemId', { schema: updateCartItemSchema }, updateCartItem)
     .post('/cart/checkout', { schema: checkoutSchema }, checkout);
 }
 
-async function getCart(request: FastifyRequest<{ Params: GetCartParams }>, reply: FastifyReply) {
-  const { sessionId } = request.params;
-
-  const [cart] = await db
-    .select()
-    .from(carts)
-    .where(and(eq(carts.sessionId, sessionId), eq(carts.status, 'open')))
-    .limit(1);
-
-  if (!cart) {
-    return reply.status(404).send({
-      statusCode: 404,
-      code: 'CART_NOT_FOUND',
-      error: 'Not Found',
-      message: 'No open cart found for this session',
-    });
-  }
-
+async function loadCartWithItems(cartId: number, sessionId: string) {
   const rows = await db
     .select({
       itemId: cartItems.id,
@@ -97,7 +102,7 @@ async function getCart(request: FastifyRequest<{ Params: GetCartParams }>, reply
       productPhotos,
       and(eq(productPhotos.productId, products.id), isNull(productPhotos.deletedAt)),
     )
-    .where(eq(cartItems.cartId, cart.id));
+    .where(eq(cartItems.cartId, cartId));
 
   const seenItems = new Map<
     number,
@@ -123,7 +128,77 @@ async function getCart(request: FastifyRequest<{ Params: GetCartParams }>, reply
     }
   }
 
-  return reply.status(200).send({ cartId: cart.id, sessionId, items: [...seenItems.values()] });
+  return { cartId, sessionId, items: [...seenItems.values()] };
+}
+
+async function getCart(request: FastifyRequest<{ Params: GetCartParams }>, reply: FastifyReply) {
+  const { sessionId } = request.params;
+
+  const [cart] = await db
+    .select()
+    .from(carts)
+    .where(and(eq(carts.sessionId, sessionId), eq(carts.status, 'open')))
+    .limit(1);
+
+  if (!cart) {
+    return reply.status(404).send({
+      statusCode: 404,
+      code: 'CART_NOT_FOUND',
+      error: 'Not Found',
+      message: 'No open cart found for this session',
+    });
+  }
+
+  return reply.status(200).send(await loadCartWithItems(cart.id, sessionId));
+}
+
+async function updateCartItem(
+  request: FastifyRequest<{ Params: UpdateCartItemParams; Body: UpdateCartItemBody }>,
+  reply: FastifyReply,
+) {
+  const { itemId } = request.params;
+  const { sessionId, quantity } = request.body;
+
+  const [cart] = await db
+    .select()
+    .from(carts)
+    .where(and(eq(carts.sessionId, sessionId), eq(carts.status, 'open')))
+    .limit(1);
+
+  if (!cart) {
+    return reply.status(404).send({
+      statusCode: 404,
+      code: 'CART_NOT_FOUND',
+      error: 'Not Found',
+      message: 'No open cart found for this session',
+    });
+  }
+
+  const [item] = await db
+    .select({ id: cartItems.id })
+    .from(cartItems)
+    .where(and(eq(cartItems.id, itemId), eq(cartItems.cartId, cart.id)))
+    .limit(1);
+
+  if (!item) {
+    return reply.status(404).send({
+      statusCode: 404,
+      code: 'CART_ITEM_NOT_FOUND',
+      error: 'Not Found',
+      message: 'Cart item not found',
+    });
+  }
+
+  if (quantity === 0) {
+    await db.delete(cartItems).where(eq(cartItems.id, itemId));
+  } else {
+    await db
+      .update(cartItems)
+      .set({ quantity, updatedAt: new Date() })
+      .where(eq(cartItems.id, itemId));
+  }
+
+  return reply.status(200).send(await loadCartWithItems(cart.id, sessionId));
 }
 
 async function addToCart(request: FastifyRequest<{ Body: AddToCartBody }>, reply: FastifyReply) {

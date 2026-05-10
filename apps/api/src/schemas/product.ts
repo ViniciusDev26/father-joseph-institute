@@ -5,6 +5,10 @@ const photoInputSchema = z.object({
   mimeType: mimeTypeSchema,
 });
 
+export const productParamsSchema = z.object({
+  id: z.coerce.number().int().positive(),
+});
+
 export const createProductBodySchema = z.object({
   name: z.string().max(255),
   description: z.string().optional(),
@@ -12,6 +16,22 @@ export const createProductBodySchema = z.object({
   artisanIds: z.array(z.number().int().positive()).min(1),
   photos: z.array(photoInputSchema).min(1),
 });
+
+export const updateProductBodySchema = z
+  .object({
+    name: z.string().min(1).max(255).optional(),
+    description: z.string().nullable().optional(),
+    price: z.number().positive().optional(),
+    artisanIds: z.array(z.number().int().positive()).min(1).optional(),
+  })
+  .refine(
+    data =>
+      data.name !== undefined ||
+      data.description !== undefined ||
+      data.price !== undefined ||
+      data.artisanIds !== undefined,
+    { message: 'At least one of name, description, price or artisanIds must be provided' },
+  );
 
 const productPhotoResponseSchema = z.object({
   id: z.number(),
@@ -38,7 +58,7 @@ const listProductPhotoSchema = z.object({
   url: z.string(),
 });
 
-const listProductItemSchema = z.object({
+const productItemSchema = z.object({
   id: z.number(),
   name: z.string(),
   description: z.string().nullable(),
@@ -48,5 +68,9 @@ const listProductItemSchema = z.object({
 });
 
 export const listProductsResponseSchema = z.object({
-  products: z.array(listProductItemSchema),
+  products: z.array(productItemSchema),
 });
+
+export const getProductResponseSchema = productItemSchema;
+
+export const updateProductResponseSchema = productItemSchema;
