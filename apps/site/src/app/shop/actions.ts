@@ -31,7 +31,7 @@ export async function getCart(): Promise<Cart | null> {
   }
 }
 
-export async function addToCart(productId: number, quantity: number): Promise<void> {
+export async function addToCart(productId: number, quantity: number): Promise<Cart | null> {
   const sessionId = await getOrCreateSessionId();
   await fetch(`${env.API_URL}/cart/items`, {
     method: 'POST',
@@ -39,6 +39,14 @@ export async function addToCart(productId: number, quantity: number): Promise<vo
     body: JSON.stringify({ sessionId, productId, quantity }),
     cache: 'no-store',
   });
+
+  try {
+    const res = await fetch(`${env.API_URL}/cart/${sessionId}`, { cache: 'no-store' });
+    if (!res.ok) return null;
+    return (await res.json()) as Cart;
+  } catch {
+    return null;
+  }
 }
 
 export async function checkout(): Promise<string | null> {

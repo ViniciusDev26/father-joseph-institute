@@ -27,10 +27,11 @@ function cartTotal(items: CartItem[]) {
 export function ShopClient({ products, initialCart, content: c }: ShopClientProps) {
   const [cartOpen, setCartOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [cart, setCart] = useOptimistic<Cart | null>(initialCart);
+  const [cart, setCart] = useState<Cart | null>(initialCart);
+  const [optimisticCart, setOptimisticCart] = useOptimistic<Cart | null>(cart);
   function handleAddToCart(product: Product) {
     startTransition(async () => {
-      setCart(prev => {
+      setOptimisticCart(prev => {
         if (!prev) {
           return {
             cartId: 0,
@@ -75,7 +76,8 @@ export function ShopClient({ products, initialCart, content: c }: ShopClientProp
           ],
         };
       });
-      await addToCart(product.id, 1);
+      const updated = await addToCart(product.id, 1);
+      setCart(updated);
       setCartOpen(true);
     });
   }
@@ -90,7 +92,7 @@ export function ShopClient({ products, initialCart, content: c }: ShopClientProp
     });
   }
 
-  const itemCount = cart?.items.reduce((sum, i) => sum + i.quantity, 0) ?? 0;
+  const itemCount = optimisticCart?.items.reduce((sum, i) => sum + i.quantity, 0) ?? 0;
 
   return (
     <div className="relative">
@@ -158,11 +160,11 @@ export function ShopClient({ products, initialCart, content: c }: ShopClientProp
             </div>
 
             <div className="flex-1 overflow-y-auto px-6 py-4">
-              {!cart || cart.items.length === 0 ? (
+              {!optimisticCart || optimisticCart.items.length === 0 ? (
                 <p className="mt-8 text-center text-bark-light">{c.cart.empty}</p>
               ) : (
                 <ul className="space-y-4">
-                  {cart.items.map(item => (
+                  {optimisticCart.items.map(item => (
                     <li key={item.product.id} className="flex gap-4">
                       <div className="relative size-16 flex-shrink-0 overflow-hidden rounded-xl bg-bark/[0.04]">
                         {item.product.photoUrl && (
@@ -190,12 +192,12 @@ export function ShopClient({ products, initialCart, content: c }: ShopClientProp
               )}
             </div>
 
-            {cart && cart.items.length > 0 && (
+            {optimisticCart && optimisticCart.items.length > 0 && (
               <div className="border-t border-bark/10 px-6 py-5">
                 <div className="mb-4 flex items-center justify-between">
                   <span className="font-medium text-bark">{c.cart.total}</span>
                   <span className="font-display text-xl font-semibold text-bark">
-                    {formatPrice(cartTotal(cart.items))}
+                    {formatPrice(cartTotal(optimisticCart.items))}
                   </span>
                 </div>
                 <button

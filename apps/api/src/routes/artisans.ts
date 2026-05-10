@@ -1,4 +1,4 @@
-import { isNull } from 'drizzle-orm';
+import { eq, isNull } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { db } from '../database/connection';
@@ -81,7 +81,11 @@ async function createArtisan(
 
   const objectKey = `artisans/${artisan.id}.${ext}`;
 
-  const [updated] = await db.update(artisans).set({ photoObjectKey: objectKey }).returning();
+  const [updated] = await db
+    .update(artisans)
+    .set({ photoObjectKey: objectKey })
+    .where(eq(artisans.id, artisan.id))
+    .returning();
 
   const presignedUrl = await generatePresignedPutUrl(objectKey, photo.mimeType);
 
