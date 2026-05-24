@@ -40,9 +40,33 @@ try {
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
+function originHost(origin: string) {
+  try {
+    return new URL(origin).host;
+  } catch {
+    return origin;
+  }
+}
+
+const corsMatchers = env.CORS_ORIGINS.map(pattern => {
+  if (pattern === '*') return () => true;
+  const hasScheme = pattern.includes('://');
+  if (pattern.includes('*')) {
+    const regex = new RegExp(
+      `^${pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*')}$`,
+    );
+    return (origin: string) => regex.test(hasScheme ? origin : originHost(origin));
+  }
+  return (origin: string) => (hasScheme ? origin : originHost(origin)) === pattern;
+});
+
+function isOriginAllowed(origin: string) {
+  return corsMatchers.some(matches => matches(origin));
+}
+
 await app.register(cors, {
   origin: (origin, cb) => {
-    if (!origin || env.CORS_ORIGINS.includes(origin)) {
+    if (!origin || isOriginAllowed(origin)) {
       cb(null, true);
       return;
     }
