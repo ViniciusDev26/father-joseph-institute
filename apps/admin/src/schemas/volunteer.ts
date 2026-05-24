@@ -4,6 +4,7 @@ export const volunteerSchema = z.object({
   id: z.number(),
   name: z.string(),
   profession: z.string(),
+  phone: z.string(),
   availability: z.object({
     days: z.array(z.string()),
     startTime: z.string(),

@@ -30,6 +30,7 @@ No parameters.
 | id                        | number   | Volunteer ID             |
 | name                      | string   | Full name                |
 | profession                | string   | Profession               |
+| phone                     | string   | Phone (11 digits only)   |
 | availability.days         | string[] | Registered weekdays      |
 | availability.startTime    | string   | Start time in `HH:MM`   |
 | availability.endTime      | string   | End time in `HH:MM`     |
@@ -52,6 +53,7 @@ No parameters.
 |----------|----------------------------|----------|----------|--------------------------------------------------------------------------|
 | body     | name                       | string   | yes      | Volunteer's full name (max 255 chars)                                    |
 | body     | profession                 | string   | yes      | Volunteer's profession (max 255 chars)                                   |
+| body     | phone                      | string   | yes      | Phone number — exactly 11 digits, no formatting (e.g. `85988887777`)     |
 | body     | availability.days          | string[] | yes      | Weekdays in English (min 1). Allowed: `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday` |
 | body     | availability.startTime     | string   | yes      | Start time in `HH:MM` format (e.g. `16:00`)                             |
 | body     | availability.endTime       | string   | yes      | End time in `HH:MM` format (e.g. `19:30`). Must be after `startTime`   |
@@ -60,7 +62,7 @@ No parameters.
 
 | Status | Description       | Body                                                     |
 |--------|-------------------|----------------------------------------------------------|
-| 201    | Volunteer created | `{ id, name, profession, availability, whatsappUrl }`   |
+| 201    | Volunteer created | `{ id, name, profession, phone, availability, whatsappUrl }` |
 | 400    | Validation error  | `{ message: string }`                                    |
 | 422    | Institution has no WhatsApp number registered | `{ message: string }`    |
 
@@ -71,6 +73,7 @@ No parameters.
 | id                  | number   | Volunteer ID                                                             |
 | name                | string   | Volunteer's full name                                                    |
 | profession          | string   | Volunteer's profession                                                   |
+| phone               | string   | Phone (11 digits only)                                                   |
 | availability.days   | string[] | Registered weekdays                                                      |
 | availability.startTime | string | Start time in `HH:MM`                                                  |
 | availability.endTime   | string | End time in `HH:MM`                                                    |

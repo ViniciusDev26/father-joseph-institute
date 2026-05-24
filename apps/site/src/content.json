@@ -115,6 +115,8 @@
       "namePlaceholder": "Seu nome",
       "profession": "Profissão",
       "professionPlaceholder": "Sua profissão ou área de atuação",
+      "phone": "Telefone",
+      "phonePlaceholder": "(00) 00000-0000",
       "availability": "Disponibilidade",
       "days": "Dias disponíveis",
       "startTime": "Horário de início",

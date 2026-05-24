@@ -64,6 +64,13 @@
       "when": 1778459200000,
       "tag": "0008_create_assisted_person",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1779629371419,
+      "tag": "0009_amazing_ricochet",
+      "breakpoints": true
     }
   ]
 }

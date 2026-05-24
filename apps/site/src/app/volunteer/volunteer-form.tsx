@@ -15,6 +15,13 @@ const WEEKDAYS: Weekday[] = [
   'sunday',
 ];
 
+function formatPhone(value: string) {
+  const digits = value.replace(/\D/g, '').slice(0, 11);
+  if (digits.length <= 2) return digits.length ? `(${digits}` : '';
+  if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
 interface VolunteerFormProps {
   content: {
     form: {
@@ -22,6 +29,8 @@ interface VolunteerFormProps {
       namePlaceholder: string;
       profession: string;
       professionPlaceholder: string;
+      phone: string;
+      phonePlaceholder: string;
       availability: string;
       days: string;
       startTime: string;
@@ -38,6 +47,7 @@ interface VolunteerFormProps {
 export function VolunteerForm({ content: c }: VolunteerFormProps) {
   const [name, setName] = useState('');
   const [profession, setProfession] = useState('');
+  const [phone, setPhone] = useState('');
   const [selectedDays, setSelectedDays] = useState<Weekday[]>([]);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
@@ -57,6 +67,7 @@ export function VolunteerForm({ content: c }: VolunteerFormProps) {
     const result = await registerVolunteer({
       name,
       profession,
+      phone: phone.replace(/\D/g, ''),
       availability: { days: selectedDays, startTime, endTime },
     });
 
@@ -137,6 +148,24 @@ export function VolunteerForm({ content: c }: VolunteerFormProps) {
         />
       </div>
 
+      {/* Phone */}
+      <div>
+        <label htmlFor="volunteer-phone" className="mb-1.5 block text-sm font-medium text-bark">
+          {c.form.phone}
+        </label>
+        <input
+          id="volunteer-phone"
+          type="tel"
+          required
+          inputMode="numeric"
+          value={formatPhone(phone)}
+          onChange={e => setPhone(e.target.value)}
+          placeholder={c.form.phonePlaceholder}
+          maxLength={15}
+          className="w-full rounded-xl border border-bark/15 bg-cream px-4 py-3 text-bark placeholder:text-bark-light/50 focus:border-terracotta focus:outline-none focus:ring-1 focus:ring-terracotta"
+        />
+      </div>
+
       {/* Availability */}
       <fieldset>
         <legend className="mb-3 text-sm font-medium text-bark">{c.form.availability}</legend>
@@ -195,7 +224,7 @@ export function VolunteerForm({ content: c }: VolunteerFormProps) {
 
       <button
         type="submit"
-        disabled={submitting || selectedDays.length === 0}
+        disabled={submitting || selectedDays.length === 0 || phone.replace(/\D/g, '').length !== 11}
         className="w-full rounded-full bg-terracotta py-3 font-medium text-cream transition-colors hover:bg-terracotta-dark disabled:opacity-60"
       >
         {submitting ? c.form.submitting : c.form.submit}

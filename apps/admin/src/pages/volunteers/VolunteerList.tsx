@@ -3,6 +3,12 @@ import { FadeIn } from '@/components/FadeIn';
 import { api } from '@/lib/axios';
 import { listVolunteersResponseSchema, type Volunteer } from '@/schemas/volunteer';
 
+function formatPhone(phone: string) {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length !== 11) return phone;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
 const DAY_LABELS: Record<string, string> = {
   monday: 'Seg',
   tuesday: 'Ter',
@@ -54,6 +60,7 @@ export function VolunteerList() {
                 <div className="bg-white rounded-lg border border-gray-200 p-4">
                   <p className="font-medium text-gray-900 text-sm">{v.name}</p>
                   <p className="text-xs text-gray-500 mt-0.5">{v.profession}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{formatPhone(v.phone)}</p>
                   <div className="flex items-center gap-3 mt-2">
                     <p className="text-xs text-gray-400">
                       {v.availability.days.map(d => DAY_LABELS[d] ?? d).join(', ')}
@@ -76,6 +83,7 @@ export function VolunteerList() {
                   <tr>
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Nome</th>
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Profissão</th>
+                    <th className="text-left px-4 py-3 font-medium text-gray-600">Telefone</th>
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Dias</th>
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Horário</th>
                   </tr>
@@ -85,6 +93,7 @@ export function VolunteerList() {
                     <tr key={v.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 font-medium text-gray-900">{v.name}</td>
                       <td className="px-4 py-3 text-gray-600">{v.profession}</td>
+                      <td className="px-4 py-3 text-gray-600">{formatPhone(v.phone)}</td>
                       <td className="px-4 py-3 text-gray-600">
                         {v.availability.days.map(d => DAY_LABELS[d] ?? d).join(', ')}
                       </td>

@@ -9,6 +9,7 @@
 | id           | serial  | no       | auto    | Primary key                                              |
 | name         | varchar(255) | no  | —       | Volunteer's full name                                    |
 | profession   | varchar(255) | no  | —       | Volunteer's profession or area of expertise              |
+| phone        | varchar(11) | no   | —       | Volunteer's phone number — digits only, exactly 11 chars |
 | availability | jsonb   | no       | —       | Availability window: `{ days: string[], startTime: string, endTime: string }` |
 
 > Standard columns (`created_at`, `updated_at`, `deleted_at`) are inherited per [ADR-007](../../../adr/api/007-paranoid-soft-delete.md) and should not be listed here.
@@ -23,6 +24,7 @@ None.
 - `availability.days` values must be valid English weekday names: `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`.
 - `availability.startTime` and `availability.endTime` must be valid times in `HH:MM` format.
 - `availability.endTime` must be after `availability.startTime`.
+- `phone` must contain exactly 11 digits (Brazilian format: DDD + 9 digits) with no formatting characters.
 
 ## Notes
 
