@@ -10,7 +10,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { carts } from './cart';
 
-export const orderStatusEnum = pgEnum('order_status', ['pending', 'paid', 'delivered']);
+export const orderStatusEnum = pgEnum('order_status', ['pending', 'paid', 'delivered', 'canceled']);
 
 export const orders = pgTable('order', {
   id: serial('id').primaryKey(),

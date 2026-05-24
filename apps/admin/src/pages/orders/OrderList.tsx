@@ -13,15 +13,17 @@ const STATUS_LABELS: Record<OrderStatus, string> = {
   pending: 'Pendente',
   paid: 'Pago',
   delivered: 'Entregue',
+  canceled: 'Cancelado',
 };
 
 const STATUS_BADGE: Record<OrderStatus, string> = {
   pending: 'bg-amber-100 text-amber-800',
   paid: 'bg-blue-100 text-blue-800',
   delivered: 'bg-green-100 text-green-800',
+  canceled: 'bg-red-100 text-red-800',
 };
 
-const STATUSES: OrderStatus[] = ['pending', 'paid', 'delivered'];
+const STATUSES: OrderStatus[] = ['pending', 'paid', 'delivered', 'canceled'];
 
 function formatCurrency(value: number) {
   return value.toFixed(2).replace('.', ',');
@@ -146,6 +148,20 @@ export function OrderList() {
                         </option>
                       ))}
                     </select>
+                    {order.status !== 'canceled' && (
+                      <button
+                        type="button"
+                        disabled={updatingId === order.id}
+                        onClick={() => {
+                          if (window.confirm('Tem certeza que deseja cancelar este pedido?')) {
+                            handleStatusChange(order.id, 'canceled');
+                          }
+                        }}
+                        className="text-xs font-medium text-red-700 border border-red-300 px-2.5 py-1 rounded-md hover:bg-red-50 disabled:opacity-50"
+                      >
+                        Cancelar pedido
+                      </button>
+                    )}
                   </div>
                 </div>
 

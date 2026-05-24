@@ -1,4 +1,4 @@
-import { and, desc, eq, isNull } from 'drizzle-orm';
+import { and, desc, eq, isNull, sql } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { db } from '../database/connection';
@@ -88,13 +88,16 @@ async function listOrders(_request: FastifyRequest, reply: FastifyReply) {
     .from(orders)
     .leftJoin(orderItems, eq(orderItems.orderId, orders.id))
     .where(isNull(orders.deletedAt))
-    .orderBy(desc(orders.createdAt));
+    .orderBy(
+      sql`case ${orders.status} when 'pending' then 1 when 'paid' then 2 when 'delivered' then 3 when 'canceled' then 4 else 5 end`,
+      desc(orders.createdAt),
+    );
 
   const byOrder = new Map<
     number,
     {
       id: number;
-      status: 'pending' | 'paid' | 'delivered';
+      status: 'pending' | 'paid' | 'delivered' | 'canceled';
       total: number;
       observations: string | null;
       sessionId: string;

@@ -41,7 +41,13 @@ app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
 await app.register(cors, {
-  origin: '*',
+  origin: (origin, cb) => {
+    if (!origin || env.CORS_ORIGINS.includes(origin)) {
+      cb(null, true);
+      return;
+    }
+    cb(new Error('Not allowed by CORS'), false);
+  },
   allowedHeaders: ['Content-Type', 'Authorization'],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 });

@@ -71,6 +71,13 @@
       "when": 1779629371419,
       "tag": "0009_amazing_ricochet",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1779840000000,
+      "tag": "0010_add_canceled_order_status",
+      "breakpoints": true
     }
   ]
 }
