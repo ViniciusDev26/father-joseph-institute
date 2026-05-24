@@ -9,12 +9,6 @@ const envSchema = z.object({
   R2_BUCKET_NAME: z.string(),
   R2_PUBLIC_URL: z.url(),
   ADMIN_BASIC_AUTH_TOKEN: z.string(),
-  CORS_ORIGINS: z.string().transform(value =>
-    value
-      .split(',')
-      .map(origin => origin.trim())
-      .filter(origin => origin.length > 0),
-  ),
 });
 
 export const env = envSchema.parse(process.env);
