@@ -1,0 +1,1 @@
+ALTER TABLE "volunteer" ADD COLUMN "phone" varchar(11) NOT NULL;

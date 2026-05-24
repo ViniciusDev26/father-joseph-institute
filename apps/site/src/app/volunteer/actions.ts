@@ -5,6 +5,7 @@ import { env } from '@/lib/env';
 interface VolunteerPayload {
   name: string;
   profession: string;
+  phone: string;
   availability: {
     days: string[];
     startTime: string;

@@ -72,6 +72,7 @@ async function listVolunteers(_request: FastifyRequest, reply: FastifyReply) {
       id: v.id,
       name: v.name,
       profession: v.profession,
+      phone: v.phone,
       availability: v.availability,
     })),
   });
@@ -81,7 +82,7 @@ async function registerVolunteer(
   request: FastifyRequest<{ Body: RegisterVolunteerBody }>,
   reply: FastifyReply,
 ) {
-  const { name, profession, availability } = request.body;
+  const { name, profession, phone, availability } = request.body;
 
   const [institution] = await db
     .select({ whatsapp: institutions.whatsapp })
@@ -100,7 +101,7 @@ async function registerVolunteer(
 
   const [volunteer] = await db
     .insert(volunteers)
-    .values({ name, profession, availability })
+    .values({ name, profession, phone, availability })
     .returning();
 
   const whatsappUrl = buildWhatsappUrl(
@@ -116,6 +117,7 @@ async function registerVolunteer(
     id: volunteer.id,
     name: volunteer.name,
     profession: volunteer.profession,
+    phone: volunteer.phone,
     availability: volunteer.availability,
     whatsappUrl,
   });
