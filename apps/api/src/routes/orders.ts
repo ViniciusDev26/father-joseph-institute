@@ -94,7 +94,7 @@ async function listOrders(_request: FastifyRequest, reply: FastifyReply) {
     number,
     {
       id: number;
-      status: 'pending' | 'paid' | 'delivered';
+      status: 'pending' | 'paid' | 'delivered' | 'canceled';
       total: number;
       observations: string | null;
       sessionId: string;
