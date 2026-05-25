@@ -40,7 +40,11 @@ try {
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
-await app.register(cors, { origin: '*' });
+await app.register(cors, {
+  origin: '*',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+});
 
 await app.register(swagger, {
   openapi: {
