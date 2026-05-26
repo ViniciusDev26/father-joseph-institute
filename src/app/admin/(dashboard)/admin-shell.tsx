@@ -37,8 +37,8 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
               onClick={onNavigate}
               className={`flex items-center px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-primary/10 text-primary font-semibold'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  ? 'bg-terracotta/10 text-terracotta font-semibold'
+                  : 'text-bark-light hover:bg-cream-dark hover:text-bark'
               }`}
             >
               {item.label}
@@ -47,7 +47,7 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
         })}
       </nav>
 
-      <div className="px-3 py-4 border-t border-gray-200">
+      <div className="px-3 py-4 border-t border-bark/10">
         <button
           type="button"
           onClick={handleLogout}
@@ -64,18 +64,18 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="md:hidden fixed top-0 inset-x-0 z-30 h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4">
+    <div className="min-h-screen bg-cream">
+      <header className="md:hidden fixed top-0 inset-x-0 z-30 h-14 bg-card border-b border-bark/10 flex items-center justify-between px-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 leading-none">
+          <p className="text-xs font-semibold uppercase tracking-wider text-bark-light/60 leading-none">
             Admin
           </p>
-          <p className="text-sm font-semibold text-gray-800 leading-tight">Instituto Padre José</p>
+          <p className="text-sm font-semibold text-bark leading-tight">Instituto Padre José</p>
         </div>
         <button
           type="button"
           onClick={() => setMenuOpen(true)}
-          className="p-2 rounded-md text-gray-500 hover:bg-gray-100 transition-colors"
+          className="p-2 rounded-md text-bark-light hover:bg-cream-dark transition-colors"
           aria-label="Abrir menu"
         >
           <svg
@@ -98,18 +98,18 @@ export function AdminShell({ children }: { children: ReactNode }) {
             className="fixed inset-0 bg-black/40"
             onClick={() => setMenuOpen(false)}
           />
-          <div className="relative z-50 w-64 bg-white flex flex-col h-full shadow-xl">
-            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+          <div className="relative z-50 w-64 bg-card flex flex-col h-full shadow-xl">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-bark/10">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <p className="text-xs font-semibold uppercase tracking-wider text-bark-light/60">
                   Admin
                 </p>
-                <p className="mt-0.5 text-sm font-semibold text-gray-800">Instituto Padre José</p>
+                <p className="mt-0.5 text-sm font-semibold text-bark">Instituto Padre José</p>
               </div>
               <button
                 type="button"
                 onClick={() => setMenuOpen(false)}
-                className="p-1.5 rounded-md text-gray-400 hover:bg-gray-100 transition-colors"
+                className="p-1.5 rounded-md text-bark-light/60 hover:bg-cream-dark transition-colors"
                 aria-label="Fechar menu"
               >
                 <svg
@@ -129,10 +129,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
       )}
 
       <div className="md:flex md:h-screen">
-        <aside className="hidden md:flex w-60 flex-shrink-0 bg-white border-r border-gray-200 flex-col">
-          <div className="px-6 py-5 border-b border-gray-200">
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Admin</p>
-            <p className="mt-0.5 text-sm font-semibold text-gray-800">Instituto Padre José</p>
+        <aside className="hidden md:flex w-60 flex-shrink-0 bg-card border-r border-bark/10 flex-col">
+          <div className="px-6 py-5 border-b border-bark/10">
+            <p className="text-xs font-semibold uppercase tracking-wider text-bark-light/60">Admin</p>
+            <p className="mt-0.5 text-sm font-semibold text-bark">Instituto Padre José</p>
           </div>
           <NavItems />
         </aside>

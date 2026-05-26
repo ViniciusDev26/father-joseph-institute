@@ -18,6 +18,20 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* Palette tokens — mirror the public site so admin feels like the same product. */
+  --color-cream: #fbf7f1;
+  --color-cream-dark: #f0e6d8;
+  --color-terracotta: #b84a30;
+  --color-terracotta-dark: #9c3d24;
+  --color-sage: #4a6741;
+  --color-sage-light: #eef2eb;
+  --color-bark: #2d2418;
+  --color-bark-light: #6b5a48;
+  --color-gold: #c99a2e;
+  --font-display: var(--font-fraunces);
+  --font-body: var(--font-albert-sans);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -25,24 +39,39 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.638 0.115 46.5);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  /* Map shadcn tokens onto the site palette. Backgrounds lean cream so panels
+     read as "Instituto Padre José" rather than generic dashboard. */
+  --background: #fbf7f1;
+  --foreground: #2d2418;
+  --card: #ffffff;
+  --card-foreground: #2d2418;
+  --primary: #b84a30;
+  --primary-foreground: #fbf7f1;
+  --secondary: #f0e6d8;
+  --secondary-foreground: #2d2418;
+  --muted: #f0e6d8;
+  --muted-foreground: #6b5a48;
+  --accent: #eef2eb;
+  --accent-foreground: #2d2418;
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --destructive-foreground: #fbf7f1;
+  --border: rgba(45, 36, 24, 0.12);
+  --input: rgba(45, 36, 24, 0.18);
+  --ring: #b84a30;
   --radius: 0.5rem;
+}
+
+.admin-root {
+  background-color: var(--color-cream);
+  color: var(--color-bark);
+  font-family: var(--font-body);
+}
+
+.admin-root h1,
+.admin-root h2,
+.admin-root h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
 }
 
 .fade-up {

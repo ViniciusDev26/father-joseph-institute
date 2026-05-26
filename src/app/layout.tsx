@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from 'next';
 import { Albert_Sans, Fraunces } from 'next/font/google';
-import { Footer } from '@/components/footer';
-import { Header } from '@/components/header';
 import './globals.css';
 
 const fraunces = Fraunces({
@@ -32,11 +30,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR" className={`${fraunces.variable} ${albertSans.variable}`}>
-      <body className="font-body">
-        <Header />
-        <main>{children}</main>
-        <Footer />
-      </body>
+      <body className="font-body">{children}</body>
     </html>
   );
 }
