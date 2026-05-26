@@ -65,8 +65,16 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-cream/10 pt-8 text-center text-xs text-cream/40">
-          &copy; {new Date().getFullYear()} Instituto Padre José. Todos os direitos reservados.
+        <div className="mt-12 flex flex-col items-center gap-3 border-t border-cream/10 pt-8 text-xs text-cream/40 sm:flex-row sm:justify-between">
+          <span>
+            &copy; {new Date().getFullYear()} Instituto Padre José. Todos os direitos reservados.
+          </span>
+          <Link
+            href="/admin/login"
+            className="transition-colors hover:text-cream/80"
+          >
+            Acesso restrito
+          </Link>
         </div>
       </div>
     </footer>
