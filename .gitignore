@@ -1,13 +1,15 @@
 # Dependencies
 node_modules
+.pnp
+.pnp.*
 
 # Build outputs
 .next
 dist
 out
-
-# Turbo
-.turbo
+build
+*.tsbuildinfo
+next-env.d.ts
 
 # Environment variables
 .env
@@ -16,8 +18,12 @@ out
 .env.test.local
 .env.production.local
 
+# Testing
+coverage
+
 # OS
 .DS_Store
+*.pem
 
 # IDE
 .vscode
@@ -27,3 +33,7 @@ out
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
+
+# Vercel
+.vercel

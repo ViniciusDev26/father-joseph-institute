@@ -10,47 +10,28 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  api:
+  app:
     build:
-      context: ./apps/api
+      context: .
       target: dev
     ports:
-      - "3001:3001"
+      - "3000:3000"
     env_file:
-      - ./apps/api/.env
+      - .env
     environment:
-      - PORT=3001
       - DATABASE_URL=postgresql://father_jose:father_jose@postgres:5432/father-database
     depends_on:
       - postgres
     develop:
       watch:
         - action: sync
-          path: ./apps/api/src
-          target: /app/src
-        - action: rebuild
-          path: ./apps/api/package.json
-
-  site:
-    build:
-      context: ./apps/site
-      target: dev
-    ports:
-      - "3000:3000"
-    environment:
-      - API_URL=http://api:3001
-    depends_on:
-      - api
-    develop:
-      watch:
-        - action: sync
-          path: ./apps/site/src
+          path: ./src
           target: /app/src
         - action: sync
-          path: ./apps/site/public
+          path: ./public
           target: /app/public
         - action: rebuild
-          path: ./apps/site/package.json
+          path: ./package.json
 
   docs:
     build:
@@ -67,23 +48,6 @@ services:
             - .vitepress/dist
         - action: rebuild
           path: ./apps/docs/package.json
-
-  admin:
-    build:
-      context: ./apps/admin
-      target: dev
-    ports:
-      - "5174:5174"
-    environment:
-      - VITE_API_URL=http://localhost:3001
-    volumes:
-      - ./apps/admin/src:/app/src
-    depends_on:
-      - api
-    develop:
-      watch:
-        - action: rebuild
-          path: ./apps/admin/package.json
 
 volumes:
   pgdata:

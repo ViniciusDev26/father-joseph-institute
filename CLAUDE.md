@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Instituto Padre José — a Brazilian nonprofit monorepo. The organization helps homeless people, gives visibility to artisan women's work, and commercializes their handmade products. Portuguese (pt-BR) for UI text, English for code/filenames.
+Instituto Padre José — a Brazilian nonprofit. The organization helps homeless people, gives visibility to artisan women's work, and commercializes their handmade products. Portuguese (pt-BR) for UI text, English for code/filenames.
 
 ## Commands
 
@@ -12,66 +12,59 @@ Instituto Padre José — a Brazilian nonprofit monorepo. The organization helps
 # Install dependencies
 bun install
 
-# Development (all apps)
+# Development
 bun run dev
 
-# Development (single app)
-bunx turbo run dev --filter=site
-bunx turbo run dev --filter=api
-
-# Build all
+# Build
 bun run build
 
-# Lint all
+# Lint
 bun run lint
-
-# Lint single app
-biome check .                  # from within apps/site or apps/api
 biome check --write .          # auto-fix
 
+# Database
+bun run db:generate
+bun run db:migrate
+bun run db:studio
+bun run db:seed
+
 # Docker
-docker build -t father-joseph-api apps/api
-docker build -t father-joseph-site apps/site
+docker build -t father-joseph .
 ```
 
 ## Architecture
 
-Turborepo monorepo with Bun as sole runtime/package manager. Two active apps:
+Single Next.js 16 fullstack project at the repo root. `apps/docs/` keeps the spec-driven documentation tree.
 
-**`apps/site`** — Next.js 16 + App Router + Tailwind CSS 4. Server components fetch content from the API with 60s ISR revalidation (`src/lib/api.ts`). Design system uses custom earthy color palette and Fraunces/Albert Sans fonts defined in `globals.css` via `@theme inline`. Output mode is `standalone` for Docker.
-
-**`apps/api`** — Fastify 5 on Bun. Uses `fastify-type-provider-zod` so Zod schemas drive validation, TypeScript types (`z.infer<>`), and OpenAPI spec generation simultaneously. Scalar serves interactive docs at `/docs`. Builds to standalone binary via `bun build --compile`.
-
-**`apps/docs/adr/`** — Architecture Decision Records organized per project (`api/`, `site/`, `admin/`), each with independent numbering starting at 001.
+- **Next.js App Router** drives both the public site and the admin panel.
+- **Route Handlers under `src/app/api/*`** replace the previous Fastify service. They share business logic with server components through `src/lib/data/*`.
+- **Drizzle ORM** against Postgres (Supabase pooler in production, local Postgres via `docker-compose` in dev).
+- **Cloudflare R2** for image storage via presigned URLs (`src/lib/storage.ts`).
+- **Admin** lives under `/admin/*`, protected by Next middleware that checks the `admin_session` httpOnly cookie. Route handlers also call `requireAdmin()` for defense in depth.
 
 ## Spec-Driven Development
 
 This project follows a **spec-driven** approach. Specs live in `apps/docs/specs/` and are the single source of truth for what the application should do. See `apps/docs/specs/README.md` for full details.
 
-Backend and frontend are independent — they communicate exclusively through API specs. Never reference one side from the other directly.
+The backend/frontend split in the specs remains conceptually useful even though they now share a process — the API contracts define what `src/app/api/*` exposes, frontend specs define what the pages render.
 
 ### Rules for the AI
 
 1. **Spec first, code second.** Before implementing anything, check if a spec exists in `apps/docs/specs/`. If not, write the spec and get user approval before writing code.
 2. **Implement only what is specified.** If the user asks for a list endpoint, create only the list endpoint — not the full CRUD. If a spec defines three fields, implement three fields — not five. Never add endpoints, fields, features, or behaviors beyond what was explicitly requested or specified.
-3. **Follow the templates.** Use the `_template.md` in the corresponding directory:
-   - Entities: `apps/docs/specs/backend/entities/_template.md`
-   - Backend features: `apps/docs/specs/backend/features/_template.md`
-   - API contracts: `apps/docs/specs/api/_template.md`
-   - Pages: `apps/docs/specs/frontend/pages/_template.md`
-   - Components: `apps/docs/specs/frontend/components/_template.md`
-   - Frontend features: `apps/docs/specs/frontend/features/_template.md`
+3. **Follow the templates** in `apps/docs/specs/*/_template.md`.
 4. **Specs override assumptions.** If a spec says something, follow the spec — even if a "common" pattern would do it differently.
 5. **Flag conflicts.** If a user request contradicts an existing spec, flag the conflict and ask for clarification before proceeding.
 6. **Reference ADRs for the _how_.** Specs define _what_ to build. ADRs in `apps/docs/adr/` define _how_ (patterns, conventions, tech choices). Don't duplicate ADR content in specs.
-7. **Read all ADRs before implementing.** Before writing any code for a feature spec, read all ADRs in the corresponding project directory (e.g., `apps/docs/adr/api/` for API features) to ensure the implementation follows every established convention.
 
 ## Key Conventions
 
-- **Environment variables**: Always validated with Zod in `env.ts` — import `env` object, never use `process.env` directly.
+- **Environment variables**: Always validated with Zod in `src/lib/env.ts` — import `env` object, never use `process.env` directly. Never use `.default()` — every env must be explicitly provided.
 - **Routes (site)**: Centralized in `src/lib/routes.ts` — import from there, never hardcode paths.
-- **API schemas**: Define Zod schemas in `src/schemas/`, infer types with `z.infer<>` in `src/types/`. The same schema feeds route validation, TypeScript types, and OpenAPI docs.
-- **Biome**: Root config sets the baseline. Each app extends with `"extends": "//"`. Site adds `next` and `react` domains plus `tailwindDirectives`.
+- **Data layer**: `src/lib/data/*` is the single surface for DB access. Server components and route handlers both call into it; never query Drizzle directly from a page or handler.
+- **API schemas**: Zod schemas in `src/schemas/` validate the public API surface (request bodies, params). Types are inferred with `z.infer<>` in `src/types/api/`. Form-only schemas (admin) live in `src/admin-schemas/`.
+- **Route handlers**: thin. Use `requireAdmin()` from `src/lib/auth.ts` to guard, `parseJsonBody`/`parseParams` from `src/lib/api-handler.ts` to validate, then delegate to a data fn and map its discriminated-union result to `NextResponse`.
+- **Admin auth**: Basic Auth credentials via `ADMIN_BASIC_AUTH_TOKEN`. Login at `/api/auth/login` sets the `admin_session` httpOnly cookie. Middleware redirects unauthenticated `/admin/*` to `/admin/login`.
 - **Formatting**: Single quotes, semicolons always, trailing commas all, 2-space indent, 100 char line width, arrow parens as needed.
 - **Docker**: Always use `oven/bun` base images. Prefer `package.json` scripts over raw commands in Dockerfiles.
 - **Language**: Code, filenames, routes, and git messages in English. Only UI-facing text in Portuguese.
@@ -81,10 +74,9 @@ Backend and frontend are independent — they communicate exclusively through AP
 | Layer | Technology |
 |-------|-----------|
 | Runtime / Package Manager | Bun >= 1.2 |
-| Monorepo | Turborepo |
-| Site | Next.js 16, Tailwind CSS 4, TypeScript |
-| API | Fastify 5, TypeScript, Zod 4 |
-| API Docs | @fastify/swagger + @scalar/fastify-api-reference |
-| Type Provider | fastify-type-provider-zod |
+| Framework | Next.js 16 (App Router), Tailwind CSS 4, TypeScript |
+| API | Next Route Handlers + Zod 4 |
 | ORM | Drizzle |
+| Storage | Cloudflare R2 |
 | Linter / Formatter | Biome v2 |
+| Forms (admin) | react-hook-form + @hookform/resolvers + shadcn/ui |
