@@ -3,7 +3,7 @@ import type {
   artisanParamsSchema,
   createArtisanBodySchema,
   updateArtisanBodySchema,
-} from '../schemas/artisan';
+} from '../../schemas/artisan';
 
 export type CreateArtisanBody = z.infer<typeof createArtisanBodySchema>;
 export type UpdateArtisanBody = z.infer<typeof updateArtisanBodySchema>;

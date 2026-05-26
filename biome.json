@@ -16,6 +16,10 @@
     "enabled": true,
     "rules": {
       "recommended": true
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
     }
   },
   "assist": {
@@ -33,5 +37,14 @@
       "trailingCommas": "all",
       "arrowParentheses": "asNeeded"
     }
+  },
+  "css": {
+    "parser": {
+      "cssModules": true,
+      "tailwindDirectives": true
+    }
+  },
+  "files": {
+    "includes": ["**", "!**/apps/**", "!**/.next/**", "!**/node_modules/**", "!**/dist/**"]
   }
 }

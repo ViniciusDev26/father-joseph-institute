@@ -10,7 +10,7 @@ import type {
   listEventsResponseSchema,
   updateEventBodySchema,
   updateEventResponseSchema,
-} from '../schemas/event';
+} from '../../schemas/event';
 
 export type EventParams = z.infer<typeof eventParamsSchema>;
 export type EventPhotoParams = z.infer<typeof eventPhotoParamsSchema>;

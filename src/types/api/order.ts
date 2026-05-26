@@ -4,7 +4,7 @@ import type {
   updateOrderObservationsParamsSchema,
   updateOrderStatusBodySchema,
   updateOrderStatusParamsSchema,
-} from '../schemas/order';
+} from '../../schemas/order';
 
 export type UpdateOrderStatusParams = z.infer<typeof updateOrderStatusParamsSchema>;
 export type UpdateOrderStatusBody = z.infer<typeof updateOrderStatusBodySchema>;

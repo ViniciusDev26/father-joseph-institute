@@ -3,7 +3,7 @@ import type {
   createProductBodySchema,
   productParamsSchema,
   updateProductBodySchema,
-} from '../schemas/product';
+} from '../../schemas/product';
 
 export type CreateProductBody = z.infer<typeof createProductBodySchema>;
 export type UpdateProductBody = z.infer<typeof updateProductBodySchema>;

@@ -5,7 +5,7 @@ import type {
   getCartParamsSchema,
   updateCartItemBodySchema,
   updateCartItemParamsSchema,
-} from '../schemas/cart';
+} from '../../schemas/cart';
 
 export type AddToCartBody = z.infer<typeof addToCartBodySchema>;
 export type CheckoutBody = z.infer<typeof checkoutBodySchema>;
