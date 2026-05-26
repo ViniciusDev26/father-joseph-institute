@@ -2,6 +2,23 @@ import { isNull } from 'drizzle-orm';
 import { db } from '@/db/connection';
 import { institutions, volunteers } from '@/db/schema';
 
+export type VolunteerRecord = {
+  id: number;
+  name: string;
+  profession: string;
+  availability: { days: string[]; startTime: string; endTime: string };
+};
+
+export async function getVolunteers(): Promise<VolunteerRecord[]> {
+  const rows = await db.select().from(volunteers).where(isNull(volunteers.deletedAt));
+  return rows.map(v => ({
+    id: v.id,
+    name: v.name,
+    profession: v.profession,
+    availability: v.availability,
+  }));
+}
+
 const dayLabels: Record<string, string> = {
   monday: 'segunda-feira',
   tuesday: 'terça-feira',
