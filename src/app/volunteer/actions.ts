@@ -5,6 +5,7 @@ import { registerVolunteer as registerVolunteerData } from '@/lib/data/volunteer
 interface VolunteerPayload {
   name: string;
   profession: string;
+  phone: string;
   availability: {
     days: string[];
     startTime: string;

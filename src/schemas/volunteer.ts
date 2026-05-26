@@ -28,6 +28,7 @@ export const listVolunteersResponseSchema = z.object({
       id: z.number(),
       name: z.string(),
       profession: z.string(),
+      phone: z.string(),
       availability: z.object({
         days: z.array(z.string()),
         startTime: z.string(),
@@ -40,6 +41,7 @@ export const listVolunteersResponseSchema = z.object({
 export const registerVolunteerBodySchema = z.object({
   name: z.string().max(255),
   profession: z.string().max(255),
+  phone: z.string().regex(/^\d{11}$/, 'phone must contain exactly 11 digits'),
   availability: availabilitySchema,
 });
 
@@ -47,6 +49,7 @@ export const registerVolunteerResponseSchema = z.object({
   id: z.number(),
   name: z.string(),
   profession: z.string(),
+  phone: z.string(),
   availability: z.object({
     days: z.array(z.string()),
     startTime: z.string(),

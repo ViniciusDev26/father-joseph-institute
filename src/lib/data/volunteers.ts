@@ -6,6 +6,7 @@ export type VolunteerRecord = {
   id: number;
   name: string;
   profession: string;
+  phone: string;
   availability: { days: string[]; startTime: string; endTime: string };
 };
 
@@ -15,6 +16,7 @@ export async function getVolunteers(): Promise<VolunteerRecord[]> {
     id: v.id,
     name: v.name,
     profession: v.profession,
+    phone: v.phone,
     availability: v.availability,
   }));
 }
@@ -45,6 +47,7 @@ function buildWhatsappUrl(
 export type RegisterVolunteerInput = {
   name: string;
   profession: string;
+  phone: string;
   availability: {
     days: string[];
     startTime: string;
@@ -78,6 +81,7 @@ export async function registerVolunteer(
     .values({
       name: input.name,
       profession: input.profession,
+      phone: input.phone,
       availability: input.availability,
     })
     .returning();

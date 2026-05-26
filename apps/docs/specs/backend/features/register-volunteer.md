@@ -11,7 +11,8 @@ As a person interested in volunteering, I want to register my availability, so t
 
 ## Acceptance criteria
 
-- [ ] Persists a new volunteer with name, profession, and availability.
+- [ ] Persists a new volunteer with name, profession, phone, and availability.
+- [ ] `phone` must contain exactly 11 digits; returns 400 otherwise.
 - [ ] `availability.days` must have at least one valid English weekday name; returns 400 otherwise.
 - [ ] `availability.startTime` and `availability.endTime` must match `HH:MM` format; returns 400 otherwise.
 - [ ] `availability.endTime` must be after `availability.startTime`; returns 400 otherwise.

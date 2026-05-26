@@ -24,6 +24,7 @@
 |-------|------|-----------|
 | `name` | text | required |
 | `profession` | text | required |
+| `phone` | tel (masked `(99) 99999-9999`) | required, 11 dígitos |
 | `availability.days` | multi-select (buttons) | mínimo 1 dia |
 | `availability.startTime` | time | required |
 | `availability.endTime` | time | required |
@@ -38,6 +39,10 @@ Os dias são selecionados em português e enviados para a API em inglês:
 - **Submitting:** Botão desabilitado com texto "Enviando...".
 - **Error:** Mensagem de erro vermelha acima do botão com o texto retornado pela API.
 - **Success:** Substitui o formulário pelo card de sucesso com link para WhatsApp.
+
+## Phone mask
+
+O campo de telefone exibe a máscara `(99) 99999-9999` enquanto o usuário digita. Antes de enviar à API, todos os caracteres não numéricos são removidos — o backend recebe e armazena apenas os 11 dígitos.
 
 ## Notes
 

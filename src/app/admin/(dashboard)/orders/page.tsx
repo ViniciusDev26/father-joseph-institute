@@ -15,15 +15,17 @@ const STATUS_LABELS: Record<OrderStatus, string> = {
   pending: 'Pendente',
   paid: 'Pago',
   delivered: 'Entregue',
+  canceled: 'Cancelado',
 };
 
 const STATUS_BADGE: Record<OrderStatus, string> = {
   pending: 'bg-amber-100 text-amber-800',
   paid: 'bg-blue-100 text-blue-800',
   delivered: 'bg-green-100 text-green-800',
+  canceled: 'bg-red-100 text-red-800',
 };
 
-const STATUSES: OrderStatus[] = ['pending', 'paid', 'delivered'];
+const STATUSES: OrderStatus[] = ['pending', 'paid', 'delivered', 'canceled'];
 
 function formatCurrency(value: number) {
   return value.toFixed(2).replace('.', ',');
@@ -136,18 +138,32 @@ export default function OrderList() {
                     <p className="text-lg font-mono font-semibold text-primary">
                       R$ {formatCurrency(order.total)}
                     </p>
-                    <select
-                      value={order.status}
-                      disabled={updatingId === order.id}
-                      onChange={e => handleStatusChange(order.id, e.target.value as OrderStatus)}
-                      className="text-sm rounded-md border border-gray-300 px-2 py-1 bg-white disabled:opacity-50"
-                    >
-                      {STATUSES.map(s => (
-                        <option key={s} value={s}>
-                          {STATUS_LABELS[s]}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="relative">
+                      <select
+                        value={order.status}
+                        disabled={updatingId === order.id}
+                        onChange={e => handleStatusChange(order.id, e.target.value as OrderStatus)}
+                        className={`appearance-none cursor-pointer text-sm font-medium rounded-lg border pl-3 pr-9 py-1.5 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed ${STATUS_BADGE[order.status]} border-transparent hover:brightness-95`}
+                      >
+                        {STATUSES.map(s => (
+                          <option key={s} value={s} className="bg-white text-gray-900">
+                            {STATUS_LABELS[s]}
+                          </option>
+                        ))}
+                      </select>
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 opacity-70"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.06l3.71-3.83a.75.75 0 1 1 1.08 1.04l-4.25 4.39a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
 

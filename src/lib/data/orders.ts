@@ -1,4 +1,4 @@
-import { and, desc, eq, isNull } from 'drizzle-orm';
+import { and, desc, eq, isNull, sql } from 'drizzle-orm';
 import { db } from '@/db/connection';
 import { orderItems, orders } from '@/db/schema';
 
@@ -11,7 +11,7 @@ export type OrderItem = {
 
 export type OrderRecord = {
   id: number;
-  status: 'pending' | 'paid' | 'delivered';
+  status: 'pending' | 'paid' | 'delivered' | 'canceled';
   total: number;
   observations: string | null;
   sessionId: string;
@@ -36,7 +36,10 @@ export async function getOrders(): Promise<OrderRecord[]> {
     .from(orders)
     .leftJoin(orderItems, eq(orderItems.orderId, orders.id))
     .where(isNull(orders.deletedAt))
-    .orderBy(desc(orders.createdAt));
+    .orderBy(
+      sql`case ${orders.status} when 'pending' then 1 when 'paid' then 2 when 'delivered' then 3 when 'canceled' then 4 else 5 end`,
+      desc(orders.createdAt),
+    );
 
   const byOrder = new Map<number, OrderRecord>();
   for (const row of rows) {
@@ -66,12 +69,12 @@ export async function getOrders(): Promise<OrderRecord[]> {
 }
 
 export type UpdateOrderStatusResult =
-  | { ok: true; id: number; status: 'pending' | 'paid' | 'delivered' }
+  | { ok: true; id: number; status: 'pending' | 'paid' | 'delivered' | 'canceled' }
   | { ok: false; code: 'ORDER_NOT_FOUND'; message: string };
 
 export async function updateOrderStatus(
   id: number,
-  status: 'pending' | 'paid' | 'delivered',
+  status: 'pending' | 'paid' | 'delivered' | 'canceled',
 ): Promise<UpdateOrderStatusResult> {
   const [updated] = await db
     .update(orders)
