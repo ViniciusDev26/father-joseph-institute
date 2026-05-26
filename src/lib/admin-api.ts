@@ -31,12 +31,15 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   return { data: (await res.json()) as T, status: res.status };
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: matches axios default for incremental migration
+type AnyResponse = any;
+
 export const api = {
-  get: <T = unknown>(path: string) => request<T>('GET', path),
-  post: <T = unknown>(path: string, body?: unknown) => request<T>('POST', path, body),
-  patch: <T = unknown>(path: string, body?: unknown) => request<T>('PATCH', path, body),
-  put: <T = unknown>(path: string, body?: unknown) => request<T>('PUT', path, body),
-  delete: <T = unknown>(path: string) => request<T>('DELETE', path),
+  get: <T = AnyResponse>(path: string) => request<T>('GET', path),
+  post: <T = AnyResponse>(path: string, body?: unknown) => request<T>('POST', path, body),
+  patch: <T = AnyResponse>(path: string, body?: unknown) => request<T>('PATCH', path, body),
+  put: <T = AnyResponse>(path: string, body?: unknown) => request<T>('PUT', path, body),
+  delete: <T = AnyResponse>(path: string) => request<T>('DELETE', path),
 };
 
 export function isApiError(err: unknown): err is AdminApiError {
