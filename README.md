@@ -1,15 +1,20 @@
 # Instituto Padre José
 
-Monorepo do projeto Instituto Padre José — organização que ajuda moradores de rua, dá visibilidade ao trabalho de artesãs e comercializa os produtos produzidos por elas.
+Projeto Instituto Padre José — organização que ajuda moradores de rua, dá visibilidade ao trabalho de artesãs e comercializa os produtos produzidos por elas.
 
 ## Estrutura
 
 ```
-apps/
-├── site/    # Site institucional (Next.js 16 + Tailwind CSS 4)
-├── api/     # API REST (Fastify 5 + Bun)
-├── docs/    # Site de documentação (VitePress)
-└── admin/   # Painel administrativo (a definir)
+.
+├── src/                # Aplicação Next.js (site público + API + admin)
+│   ├── app/
+│   │   ├── api/        # Route handlers
+│   │   └── admin/      # Painel administrativo (/admin/*)
+│   ├── db/             # Drizzle schema + migrations
+│   ├── lib/data/       # Camada de acesso compartilhada
+│   └── schemas/        # Zod schemas que validam a API pública
+├── apps/docs/          # Documentação (VitePress) e specs/ADRs
+└── docker-compose.yml  # Postgres local + watch da app
 ```
 
 ## Stack
@@ -17,36 +22,37 @@ apps/
 | Camada | Tecnologia |
 |--------|-----------|
 | Runtime / Package Manager | Bun |
-| Monorepo | Turborepo |
-| Site | Next.js, Tailwind CSS, TypeScript |
-| API | Fastify, TypeScript, Zod |
+| Framework | Next.js 16, Tailwind CSS 4, TypeScript |
+| API | Next Route Handlers + Zod 4 |
+| ORM | Drizzle |
+| Storage | Cloudflare R2 |
 | Docs | VitePress |
 | Linter / Formatter | Biome |
 
 ## Pré-requisitos
 
 - [Bun](https://bun.sh) >= 1.2
+- Postgres acessível (via `docker-compose up postgres` ou Supabase)
 
 ## Setup
 
 ```bash
 bun install
+cp .env.example .env  # preencher as variáveis abaixo
+bun run db:migrate
+bun run db:seed
 ```
+
+Variáveis obrigatórias:
+
+- `DATABASE_URL` — connection string do Postgres (usar pooler do Supabase em produção)
+- `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_URL` — credenciais do Cloudflare R2
+- `ADMIN_BASIC_AUTH_TOKEN` — credenciais Basic Auth do admin no formato `user:senha`
 
 ## Desenvolvimento
 
-Rodar todos os projetos:
-
 ```bash
-bun run dev
-```
-
-Rodar um projeto específico:
-
-```bash
-bunx turbo run dev --filter=site
-bunx turbo run dev --filter=api
-bunx turbo run dev --filter=docs
+bun run dev          # site + api + admin no mesmo processo (porta 3000)
 ```
 
 ## Build
@@ -59,28 +65,18 @@ bun run build
 
 ```bash
 bun run lint
+bun run lint:fix
 ```
 
 ## Docker
 
 ```bash
-# API
-docker build -t father-joseph-api apps/api
-docker run -p 3001:3001 father-joseph-api
-
-# Site
-docker build -t father-joseph-site apps/site
-docker run -p 3000:3000 -e API_URL=http://host.docker.internal:3001 father-joseph-site
-
-# Docs
-bunx turbo run build --filter=docs
-bunx turbo run dev --filter=docs
+docker compose up         # postgres + app com watch
+docker build -t father-joseph .  # build de produção
 ```
 
 ## Documentação
 
-- [Ideia do projeto](apps/docs/IDEA.md)
-- [ADRs globais](apps/docs/adr/)
-- [ADRs do site](apps/docs/adr/site/)
-- [ADRs da API](apps/docs/adr/api/)
+- [Specs](apps/docs/specs/)
+- [ADRs](apps/docs/adr/)
 - [Site da documentação](apps/docs/)
